@@ -18,6 +18,21 @@ public class BibliotecaService {
     private HashMap<String, Estudiante> registroEstudiantes = new HashMap<>();
     private HashSet<Prestamo> prestamosActivos = new HashSet<>();
 
+    //Metodo para buscar Estudiante por legajo
+    // Para el HashMap (es súper directo)
+public Estudiante buscarEstudiante(String legajo) {
+    return registroEstudiantes.get(legajo);
+}
+
+// Para el ArrayList (hay que recorrerlo)
+public Libro buscarLibroPorIsbn(String isbn) {
+    for (Libro libro : catalogo) {
+        if (libro.getIsbn().equals(isbn)) {
+            return libro;
+        }
+    }
+    return null; // O podrías lanzar una excepción si preferís
+}
     // 2.5 Lógica de Multa Recursiva
     // 1% por día de retraso, máximo 30 días calculables
     public double calcularMulta(int diasRetraso, double valorLibro) {
