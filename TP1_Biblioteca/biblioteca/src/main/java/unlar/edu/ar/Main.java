@@ -1,6 +1,7 @@
 package unlar.edu.ar;
 
 import unlar.edu.ar.exception.LibroNoDisponibleException;
+import unlar.edu.ar.exception.LimitePrestamosExcedidoException;
 import unlar.edu.ar.model.Estudiante;
 import unlar.edu.ar.model.Libro;
 import unlar.edu.ar.service.BibliotecaService;
@@ -21,8 +22,8 @@ public class Main {
         service.agregarLibro(new Libro("105", "Sistemas Operativos", "Tanenbaum", 2009));
         
         service.agregarEstudiante(new Estudiante("111", "Marisa Chaile", "Sistemas", "mar@unlar.edu.ar"));
-        service.agregarEstudiante(new Estudiante("222", "Pablo", "Programación", "pablo@unlar.edu.ar"));
-        service.agregarEstudiante(new Estudiante("333", "Virginia", "Sistemas", "test@unlar.edu.ar"));
+        service.agregarEstudiante(new Estudiante("222", "Pablo Galarza", "Programación", "pablo@unlar.edu.ar"));
+        service.agregarEstudiante(new Estudiante("333", "Virginia Vera", "Sistemas", "test@unlar.edu.ar"));
 
 
         // 2. Prueba de Préstamo Exitoso
@@ -41,6 +42,33 @@ public class Main {
         } catch (Exception e) {
             System.out.println(" Error inesperado: " + e.getMessage());
         }
+// 3. Prueba de Excepción: Libro No Disponible
+        try {
+            System.out.println("\n--- Test: Libro No Disponible ---");
+            // Intentamos pedir el mismo libro "101" con otro estudiante
+            service.registrarPrestamo("222", "101");
+        } catch (LibroNoDisponibleException e) {
+            System.out.println(" Capturada correctamente: " + e.getMessage());
+        } catch (Exception e) { e.printStackTrace(); }
 
+        // 4. Prueba de Excepción: Límite Excedido (Máximo 3 libros)
+        try {
+            System.out.println("\n--- Test: Límite de Préstamos (Estudiante Lea) ---");
+            service.registrarPrestamo("222", "102"); // Libro 1
+            service.registrarPrestamo("222", "103"); // Libro 2
+            service.registrarPrestamo("222", "104"); // Libro 3
+            System.out.println(" Lea pidió 3 libros con éxito.");
+            
+            System.out.println(" Intentando pedir un 4to libro para Lea...");
+            service.registrarPrestamo("222", "105"); 
+        } catch (LimitePrestamosExcedidoException e) {
+            System.out.println(" Capturada correctamente: " + e.getMessage());
+        } catch (Exception e) { e.printStackTrace(); }
+
+        // 5. Prueba de Recursividad (Multa)
+        System.out.println("\n--- Cálculo de Multa (Recursivo) ---");
+        double multa = service.calcularMulta(15, 5000.0); // 15 días de retraso
+        System.out.println("Multa por 15 días: $" + multa);
+    }
         
 }
