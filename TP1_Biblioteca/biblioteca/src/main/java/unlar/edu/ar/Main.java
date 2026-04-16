@@ -14,7 +14,7 @@ public class Main {
 
         ui.mostrarBienvenida();
 
-// 1. Carga de datos iniciales (Mínimo 5 libros y 3 estudiantes según consigna)
+        // 1. Carga de datos iniciales
         service.agregarLibro(new Libro("101", "Java para Sistemas", "Deitel", 2023));
         service.agregarLibro(new Libro("102", "Clean Code", "Robert Martin", 2008));
         service.agregarLibro(new Libro("103", "Patrones de Diseño", "GoF", 1994));
@@ -25,22 +25,19 @@ public class Main {
         service.agregarEstudiante(new Estudiante("222", "Pablo Galarza", "Programación", "pablo@unlar.edu.ar"));
         service.agregarEstudiante(new Estudiante("333", "Virginia Vera", "Sistemas", "test@unlar.edu.ar"));
 
-
-        // 2. Prueba de Préstamo Exitoso
-
+        // --- 2. Prueba de Préstamo Exitoso ---
+        System.out.println("\n[ TEST 1: Préstamo Exitoso ]");
         try {
             String legajo = "111";
             String isbn = "101";
             
             service.registrarPrestamo(legajo, isbn);
-            
-            // Buscamos los datos para que el mensaje no sea "fijo"
             String nombreE = service.buscarEstudiante(legajo).getNombre();
             String tituloL = service.buscarLibroPorIsbn(isbn).getTitulo();
             
-            System.out.println(" Préstamo registrado: '" + tituloL + "' a " + nombreE);
+            System.out.println(" >> OK: '" + tituloL + "' prestado a " + nombreE);
         } catch (Exception e) {
-            System.out.println(" Error inesperado: " + e.getMessage());
+            System.out.println(" >> ERROR INESPERADO: " + e.getMessage());
         }
 // 3. Prueba de Excepción: Libro No Disponible
         try {
@@ -58,7 +55,7 @@ public class Main {
             service.registrarPrestamo("222", "103"); // Libro 2
             service.registrarPrestamo("222", "104"); // Libro 3
             System.out.println(" Pablo pidió 3 libros con éxito.");
-            service.registrarPrestamo("111", "105"); 
+            service.registrarPrestamo("111", "105"); // Libro 4 para Marisa 
             System.err.println(" Marisa pidió un 4to libro, pero debería haber lanzado una excepción.");
             
             System.out.println(" Intentando pedir un 4to libro para Marisa...");
