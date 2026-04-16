@@ -1,7 +1,4 @@
-
 ====================TP1: Gestión de Biblioteca - Programación III====================
-Catedra de programcion 3. Integrantes: Galarza Pablo, Chaile Marisa Soledad, Vera Herrera Virginia.
-
 
 Este proyecto implementa un sistema de gestión bibliotecaria desarrollado para la cátedra de Programación III de la UNLaR. El objetivo es demostrar el uso de colecciones, excepciones personalizadas, recursividad y arquitectura de capas en Java.
 
