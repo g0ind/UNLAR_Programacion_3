@@ -27,7 +27,7 @@ public class Main {
 
 
         // 2. Prueba de Préstamo Exitoso
-       // 2. Prueba de Préstamo Exitoso (DINÁMICO)
+
         try {
             String legajo = "111";
             String isbn = "101";
@@ -53,13 +53,15 @@ public class Main {
 
         // 4. Prueba de Excepción: Límite Excedido (Máximo 3 libros)
         try {
-            System.out.println("\n--- Test: Límite de Préstamos (Estudiante Lea) ---");
+            System.out.println("\n--- Test: Límite de Préstamos (Estudiante Pablo) ---");
             service.registrarPrestamo("222", "102"); // Libro 1
             service.registrarPrestamo("222", "103"); // Libro 2
             service.registrarPrestamo("222", "104"); // Libro 3
-            System.out.println(" Lea pidió 3 libros con éxito.");
+            System.out.println(" Pablo pidió 3 libros con éxito.");
+            service.registrarPrestamo("111", "105"); 
+            System.err.println(" Marisa pidió un 4to libro, pero debería haber lanzado una excepción.");
             
-            System.out.println(" Intentando pedir un 4to libro para Lea...");
+            System.out.println(" Intentando pedir un 4to libro para Marisa...");
             service.registrarPrestamo("222", "105"); 
         } catch (LimitePrestamosExcedidoException e) {
             System.out.println(" Capturada correctamente: " + e.getMessage());

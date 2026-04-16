@@ -14,80 +14,62 @@ import unlar.edu.ar.model.Prestamo;
 
 public class BibliotecaService {
     // 2.2 Estructuras de Datos requeridas
-    private ArrayList<Libro> catalogo = new ArrayList<>();
-    private HashMap<String, Estudiante> registroEstudiantes = new HashMap<>();
-    private HashSet<Prestamo> prestamosActivos = new HashSet<>();
+    private final ArrayList<Libro> catalogo = new ArrayList<>();
+    private final HashMap<String, Estudiante> registroEstudiantes = new HashMap<>();
+    private final HashSet<Prestamo> prestamosActivos = new HashSet<>();
 
-    //Metodo para buscar Estudiante por legajo
-    // Para el HashMap (es súper directo)
-public Estudiante buscarEstudiante(String legajo) {
-    return registroEstudiantes.get(legajo);
-}
-
-// Para el ArrayList (hay que recorrerlo)
-public Libro buscarLibroPorIsbn(String isbn) {
-    for (Libro libro : catalogo) {
-        if (libro.getIsbn().equals(isbn)) {
-            return libro;
-        }
+    // --- MÉTODOS DE BÚSQUEDA ---
+    
+    public Estudiante buscarEstudiante(String legajo) {
+        return registroEstudiantes.get(legajo);
     }
-    return null; // O podrías lanzar una excepción si preferís
-}
-    // 2.5 Lógica de Multa Recursiva
-    // 1% por día de retraso, máximo 30 días calculables
-    public double calcularMulta(int diasRetraso, double valorLibro) {
-        // Caso Base 1: No hay retraso o terminamos la cuenta
-        if (diasRetraso <= 0) {
-            return 0;
-        }
-        // Caso Base 2: Límite de 30 días según consigna
-        if (diasRetraso > 30) {
-            return calcularMulta(30, valorLibro); 
-        }
 
-        // Llamada recursiva: 1% del valor + multa del día anterior
+    public Libro buscarLibroPorIsbn(String isbn) {
+        for (Libro libro : catalogo) {
+            if (libro.getIsbn().equals(isbn)) {
+                return libro;
+            }
+        }
+        return null;
+    }
+
+    // --- 2.5 LÓGICA DE MULTA RECURSIVA ---
+    public double calcularMulta(int diasRetraso, double valorLibro) {
+        if (diasRetraso <= 0) return 0;
+        if (diasRetraso > 30) return calcularMulta(30, valorLibro); 
+
         double montoDiaActual = valorLibro * 0.01;
         return montoDiaActual + calcularMulta(diasRetraso - 1, valorLibro);
     }
 
-    public void registrarPrestamo(String isbn, String legajo) 
+    // --- 2.4 REGISTRAR PRÉSTAMO ---
+    // Cambié el orden a (legajo, isbn) para que coincida con el Main dinámico
+    public void registrarPrestamo(String legajo, String isbn) 
             throws LibroNoDisponibleException, EstudianteNoEncontradoException, LimitePrestamosExcedidoException {
         
-        // 1. Validar Estudiante
-        Estudiante est = registroEstudiantes.get(legajo);
+        Estudiante est = buscarEstudiante(legajo);
         if (est == null) throw new EstudianteNoEncontradoException("Legajo " + legajo + " no existe.");
 
-        // 2. Validar Libro
         Libro lib = buscarLibroPorIsbn(isbn);
         if (lib == null || !lib.isDisponible()) {
             throw new LibroNoDisponibleException("El libro con ISBN " + isbn + " no está disponible.");
         }
 
-        // 3. Validar Límite (Máximo 3)
+        // Validar Límite (Máximo 3) antes de registrar el préstamo
         long cantidad = prestamosActivos.stream()
                         .filter(p -> p.getEstudiante().getLegajo().equals(legajo))
                         .count();
         if (cantidad >= 3) throw new LimitePrestamosExcedidoException("El estudiante ya tiene 3 libros.");
 
-        // Si todo está ok, registramos
+        // Registro exitoso
         Prestamo nuevo = new Prestamo(lib, est);
         lib.setDisponible(false);
         prestamosActivos.add(nuevo);
     }
 
-    // Método auxiliar para buscar en el ArrayList
-    private Libro buscarLibroPorIsbn(String isbn) {
-        for (Libro l : catalogo) {
-            if (l.getIsbn().equals(isbn)) return l;
-        }
-        return null;
-    }
-
-    // 2.4 Registrar devolución y liberar libro
-    public double registrarDevolucion(String isbn, String legajo, int diasRetraso) {
+    // ---  REGISTRAR DEVOLUCIÓN ---
+    public double registrarDevolucion(String legajo, String isbn, int diasRetraso) {
         Prestamo prestamoEncontrado = null;
-        
-        // Buscamos el préstamo en el HashSet
         for (Prestamo p : prestamosActivos) {
             if (p.getLibro().getIsbn().equals(isbn) && p.getEstudiante().getLegajo().equals(legajo)) {
                 prestamoEncontrado = p;
@@ -98,15 +80,13 @@ public Libro buscarLibroPorIsbn(String isbn) {
         if (prestamoEncontrado != null) {
             prestamosActivos.remove(prestamoEncontrado);
             prestamoEncontrado.getLibro().setDisponible(true);
-            
-            // Si hay retraso, calculamos la multa con el método recursivo
-            // Supongamos un valor fijo de libro para el ejemplo o sacalo del modelo si lo agregás
             return calcularMulta(diasRetraso, 1000.0); 
         }
         return 0;
     }
 
-    // 2.4 Búsqueda parcial por título (case-insensitive)
+    // --- BÚSQUEDAS Y LISTADOS ---
+
     public List<Libro> buscarLibrosPorTitulo(String titulo) {
         List<Libro> resultados = new ArrayList<>();
         for (Libro l : catalogo) {
@@ -117,7 +97,6 @@ public Libro buscarLibroPorIsbn(String isbn) {
         return resultados;
     }
 
-    // Métodos para cargar datos iniciales
     public void agregarLibro(Libro libro) {
         catalogo.add(libro);
     }
@@ -125,12 +104,11 @@ public Libro buscarLibroPorIsbn(String isbn) {
     public void agregarEstudiante(Estudiante estudiante) {
         registroEstudiantes.put(estudiante.getLegajo(), estudiante);
     }
-    // 2.4 Listar préstamos por estudiante específico
+
     public void listarPrestamosPorEstudiante(String legajo) {
         System.out.println("Préstamos del estudiante con legajo: " + legajo);
         prestamosActivos.stream()
             .filter(p -> p.getEstudiante().getLegajo().equals(legajo))
             .forEach(System.out::println);
     }
-
 }
