@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 package unlar.edu.ar.ui;
 
 import unlar.edu.ar.service.BibliotecaService;
@@ -19,4 +17,3 @@ public class ConsolaUI {
         System.out.println("========================================\n");
     }
 }
->>>>>>> 81561929e75a5b582ba53dd81c2bf768fa3cd25a
