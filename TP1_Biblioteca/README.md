@@ -53,4 +53,4 @@ Bash
 mvn exec:java -Dexec.mainClass="unlar.edu.ar.Main"
 📊 Diagrama de Clases
 El diseño del sistema se basó en el siguiente diagrama UML:
-![alt text](image.png)
+![alt text](image-1.png)
