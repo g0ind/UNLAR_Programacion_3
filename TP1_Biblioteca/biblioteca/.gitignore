@@ -1,0 +1,19 @@
+# Archivos de compilación de Maven
+target/
+
+# Configuraciones de Visual Studio Code
+.vscode/
+
+# Archivos del Sistema Operativo
+Thumbs.db
+.DS_Store
+
+# Archivos temporales o de logs
+*.log
+# Archivos de configuración de Eclipse
+.settings/
+.project/
+# Archivos de configuración de Java
+.classpath/
+# Archivos de clase compilados
+*.class
