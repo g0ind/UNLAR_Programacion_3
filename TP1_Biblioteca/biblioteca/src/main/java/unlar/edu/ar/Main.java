@@ -13,13 +13,14 @@ public class Main {
 
         ui.mostrarBienvenida();
 
-        // 1. Carga de datos iniciales
+        // 1. Carga de los datos iniciales
         service.agregarLibro(new Libro("111", "Java para Sistemas", "Deitel", 2023));
         service.agregarLibro(new Libro("222", "Clean Code", "Robert Martin", 2008));
         service.agregarLibro(new Libro("333", "Patrones de Diseño", "GoF", 1994));
         
         service.agregarEstudiante(new Estudiante("101", "Marisa Chaile", "Sistemas", "mar@unlar.edu.ar"));
         service.agregarEstudiante(new Estudiante("102", "Lea", "Programacion", "lea@unlar.edu.ar"));
+
 
         // 2. Prueba de Préstamo Exitoso
         try {
