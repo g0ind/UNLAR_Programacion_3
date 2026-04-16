@@ -39,35 +39,38 @@ public class Main {
         } catch (Exception e) {
             System.out.println(" >> ERROR INESPERADO: " + e.getMessage());
         }
-// 3. Prueba de Excepción: Libro No Disponible
+// --- 3. Prueba de Excepción: Libro No Disponible ---
+        System.out.println("\n[ TEST 2: Libro No Disponible ]");
         try {
-            System.out.println("\n--- Test: Libro No Disponible ---");
-            // Intentamos pedir el mismo libro "101" con otro estudiante
+            // Intentamos que Pablo pida el libro 101 (que ya lo tiene Marisa)
             service.registrarPrestamo("222", "101");
         } catch (LibroNoDisponibleException e) {
-            System.out.println(" Capturada correctamente: " + e.getMessage());
-        } catch (Exception e) { e.printStackTrace(); }
+            System.out.println(" >> CAPTURADA: " + e.getMessage());
+        } catch (Exception e) { 
+            System.out.println(" >> ERROR INESPERADO: " + e.getMessage()); 
+        }
 
-        // 4. Prueba de Excepción: Límite Excedido (Máximo 3 libros)
+        // --- 4. Prueba de Excepción: Límite Excedido (Máximo 3 libros) ---
+        System.out.println("\n[ TEST 3: Límite de 3 Libros ]");
         try {
-            System.out.println("\n--- Test: Límite de Préstamos (Estudiante Pablo) ---");
-            service.registrarPrestamo("222", "102"); // Libro 1
-            service.registrarPrestamo("222", "103"); // Libro 2
-            service.registrarPrestamo("222", "104"); // Libro 3
-            System.out.println(" Pablo pidió 3 libros con éxito.");
-            service.registrarPrestamo("111", "105"); // Libro 4 para Marisa 
-            System.err.println(" Marisa pidió un 4to libro, pero debería haber lanzado una excepción.");
+            System.out.println(" Cargando libros a Pablo Galarza...");
+            service.registrarPrestamo("222", "102"); 
+            service.registrarPrestamo("222", "103"); 
+            service.registrarPrestamo("222", "104"); 
+            System.out.println(" >> OK: Pablo pidió 3 libros con éxito.");
             
-            System.out.println(" Intentando pedir un 4to libro para Marisa...");
+            System.out.print(" Intentando pedir un 4to libro (ISBN 105)... ");
+            // Pablo intenta pedir el 105 (que sí está en la biblioteca)
             service.registrarPrestamo("222", "105"); 
         } catch (LimitePrestamosExcedidoException e) {
-            System.out.println(" Capturada correctamente: " + e.getMessage());
-        } catch (Exception e) { e.printStackTrace(); }
+            System.out.println("\n >> CAPTURADA: " + e.getMessage());
+        } catch (Exception e) { 
+            System.out.println("\n >> ERROR INESPERADO: " + e.getMessage()); 
+        }
 
-        // 5. Prueba de Recursividad (Multa)
-        System.out.println("\n--- Cálculo de Multa (Recursivo) ---");
-        double multa = service.calcularMulta(15, 5000.0); // 15 días de retraso
-        System.out.println("Multa por 15 días: $" + multa);
+        // --- 5. Prueba de Recursividad (Multa) ---
+        System.out.println("\n[ TEST 4: Cálculo de Multa Recursivo ]");
+        double multa = service.calcularMulta(15, 5000.0);
+        System.out.println(" >> OK: Multa por 15 días: $" + multa);
     }
-        
 }
