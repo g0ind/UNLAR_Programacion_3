@@ -1,4 +1,4 @@
-package UNLAR_Programacion_3.atm.src.model;
+package unlar.edu.ar.model;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
