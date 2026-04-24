@@ -1,4 +1,4 @@
-package service;
+package unlar.edu.ar.service;
 
 import exception.CuentaInactivaException;
 import exception.LimiteExtraccionExcedidoException;
