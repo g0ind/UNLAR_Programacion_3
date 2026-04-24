@@ -1,4 +1,4 @@
-package model;
+package unlar.edu.ar.model;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
