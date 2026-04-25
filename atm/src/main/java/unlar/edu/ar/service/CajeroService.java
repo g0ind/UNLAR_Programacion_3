@@ -1,152 +1,128 @@
-package service.service;
+package unlar.edu.ar.service;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import unlar.edu.ar.exception.CuentaInactivaException;
 import unlar.edu.ar.exception.LimiteExtraccionExcedidoException;
 import unlar.edu.ar.exception.SaldoInsuficienteException;
 import unlar.edu.ar.model.CuentaBancaria;
+import unlar.edu.ar.model.TipoTransaccion;
 import unlar.edu.ar.model.Transaccion;
-import unlar.edu.ar.service.CajeroService;
-import unlar.edu.ar.util.FormatoUtil;
 
-import java.math.BigDecimal;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Scanner;
+public class CajeroService {
+    
+    // El límite establecido por el TP (10.000)
+    private static final BigDecimal LIMITE_EXTRACCION = new BigDecimal("10000.00");
+    
+    private List<CuentaBancaria> cuentasRegistradas;
 
-public class MenuCajeroUI {
-    private final CajeroService cajeroService;
-    private final Scanner scanner;
-
-    public MenuCajeroUI(CajeroService cajeroService) {
-        this.cajeroService = cajeroService;
-        this.scanner = new Scanner(System.in);
+    public CajeroService() {
+        this.cuentasRegistradas = new ArrayList<>();
     }
 
-    // Bucle principal con opción de salida
-    public void iniciar(CuentaBancaria cuentaActiva) {
-        boolean salir = false;
+    // ── GESTIÓN DE CUENTAS ──────────────────────────────────────────────────
 
-        while (!salir) {
-            System.out.println("\n========================================");
-            System.out.println("CAJERO AUTOMÁTICO - UNLaR");
-            System.out.println("Cuenta: " + cuentaActiva.getNumeroCuenta() + " | Titular: " + cuentaActiva.getTitular());
-            System.out.println("========================================");
-            System.out.println("1. Consultar Saldo");
-            System.out.println("2. Depositar");
-            System.out.println("3. Extraer");
-            // Agregamos la opción de transferencia requerida por el TP
-            System.out.println("4. Transferir"); 
-            System.out.println("5. Ver Historial (Últimos 10 movimientos)");
-            System.out.println("6. Salir");
-            System.out.print("Ingrese una opción: ");
-
-            try {
-                int opcion = scanner.nextInt();
-                scanner.nextLine(); // Limpiar el buffer
-
-                // Cumpliendo el requisito: Menú interactivo usando switch expression 
-                String resultado = switch (opcion) {
-                    case 1 -> consultarSaldo(cuentaActiva);
-                    case 2 -> realizarDeposito(cuentaActiva);
-                    case 3 -> realizarExtraccion(cuentaActiva);
-                    case 4 -> realizarTransferencia(cuentaActiva);
-                    case 5 -> verHistorial(cuentaActiva);
-                    case 6 -> {
-                        salir = true;
-                        yield "Saliendo del sistema... ¡Gracias por operar con nosotros!";
-                    }
-                    default -> "Opción no válida. Por favor, seleccione un número del 1 al 6.";
-                };
-
-                System.out.println("\n--> " + resultado);
-
-            // Cumpliendo el requisito: Validación de entrada numérica 
-            } catch (InputMismatchException e) {
-                System.out.println("\n--> ERROR: Entrada inválida. Debe ingresar un número entero.");
-                scanner.nextLine(); // Limpiar el buffer corrupto para evitar bucle infinito
-            } catch (Exception e) {
-                System.out.println("\n--> ERROR INESPERADO: " + e.getMessage());
-            }
-        }
+    public void registrarCuenta(CuentaBancaria cuenta) {
+        cuentasRegistradas.add(cuenta);
     }
 
-    private String consultarSaldo(CuentaBancaria cuenta) {
-        return "Su saldo actual es: " + FormatoUtil.formatearMoneda(cuenta.getSaldo().doubleValue());
+    public void desactivarCuenta(CuentaBancaria cuenta) {
+        cuenta.setActiva(false);
     }
 
-    private String realizarDeposito(CuentaBancaria cuenta) {
-        System.out.print("Ingrese el monto a depositar: $");
-        try {
-            double monto = scanner.nextDouble();
-            scanner.nextLine();
-            
-            cajeroService.depositar(cuenta, BigDecimal.valueOf(monto));
-            return "Depósito de " + FormatoUtil.formatearMoneda(monto) + " realizado con éxito.";
-            
-        } catch (InputMismatchException e) {
-            scanner.nextLine();
-            return "Operación cancelada: El monto ingresado no es válido.";
-        } catch (IllegalArgumentException e) {
-            return "OPERACIÓN RECHAZADA: " + e.getMessage();
-        }
-    }
+    // ── OPERACIONES BANCARIAS ───────────────────────────────────────────────
 
-    private String realizarExtraccion(CuentaBancaria cuenta) {
-        System.out.print("Ingrese el monto a extraer: $");
-        try {
-            double monto = scanner.nextDouble();
-            scanner.nextLine();
-
-            // Aquí atrapamos las excepciones comprobadas que armamos antes
-            cajeroService.extraer(cuenta, BigDecimal.valueOf(monto));
-            return "Extracción exitosa. Por favor, retire sus " + FormatoUtil.formatearMoneda(monto) + ".";
-
-        } catch (InputMismatchException e) {
-            scanner.nextLine();
-            return "Operación cancelada: El monto ingresado no es válido.";
-        } catch (SaldoInsuficienteException | LimiteExtraccionExcedidoException | CuentaInactivaException e) {
-            return "OPERACIÓN RECHAZADA: " + e.getMessage();
-        }
-    }
-
-    private String realizarTransferencia(CuentaBancaria cuentaOrigen) {
-        System.out.print("Ingrese el número de cuenta destino: ");
-        String cuentaDestinoStr = scanner.nextLine();
+    /**
+     * DEPÓSITO: Valida cuenta activa y monto positivo.
+     */
+    public void depositar(CuentaBancaria cuenta, double monto) throws CuentaInactivaException {
+        validarCuentaActiva(cuenta);
         
-        System.out.print("Ingrese el monto a transferir: $");
-        try {
-            double monto = scanner.nextDouble();
-            scanner.nextLine();
+        if (monto <= 0) {
+            throw new IllegalArgumentException("El monto a depositar debe ser mayor a cero.");
+        }
 
-            // Para simplificar la interfaz visual de la consola, creamos una cuenta "falsa" solo para 
-            // representar el destino, ya que en un sistema real buscaríamos en una base de datos.
-            CuentaBancaria cuentaDestino = new CuentaBancaria(cuentaDestinoStr, "Destinatario", BigDecimal.ZERO);
-            
-            cajeroService.transferir(cuentaOrigen, cuentaDestino, BigDecimal.valueOf(monto));
-            return "Transferencia de " + FormatoUtil.formatearMoneda(monto) + " enviada a la cuenta " + cuentaDestinoStr + ".";
+        // Convertimos el double a BigDecimal para operar sin errores de precisión
+        BigDecimal montoBD = BigDecimal.valueOf(monto);
+        cuenta.setSaldo(cuenta.getSaldo().add(montoBD));
+        
+        registrarTransaccion(cuenta, TipoTransaccion.DEPOSITO, monto, "Depósito realizado");
+    }
 
-        } catch (InputMismatchException e) {
-            scanner.nextLine();
-            return "Operación cancelada: El monto ingresado no es válido.";
-        } catch (SaldoInsuficienteException | CuentaInactivaException e) {
-            return "OPERACIÓN RECHAZADA: " + e.getMessage();
+    /**
+     * EXTRACCIÓN: Valida saldo, límite de 10k y estado de cuenta.
+     */
+    public void extraer(CuentaBancaria cuenta, double monto) 
+            throws CuentaInactivaException, LimiteExtraccionExcedidoException, SaldoInsuficienteException {
+        
+        validarCuentaActiva(cuenta);
+        BigDecimal montoBD = BigDecimal.valueOf(monto);
+
+        if (monto <= 0) {
+            throw new IllegalArgumentException("El monto a extraer debe ser mayor a cero.");
+        }
+        if (montoBD.compareTo(LIMITE_EXTRACCION) > 0) {
+            throw new LimiteExtraccionExcedidoException("El monto supera el límite de $10,000 por operación.");
+        }
+        if (cuenta.getSaldo().compareTo(montoBD) < 0) {
+            throw new SaldoInsuficienteException("Saldo insuficiente para extraer $" + monto);
+        }
+
+        // Restamos saldo
+        cuenta.setSaldo(cuenta.getSaldo().subtract(montoBD));
+        
+        registrarTransaccion(cuenta, TipoTransaccion.EXTRACCION, monto, "Extracción en cajero");
+    }
+
+    /**
+     * TRANSFERENCIA: Operación ATÓMICA entre dos cuentas.
+     */
+    public void transferir(CuentaBancaria origen, CuentaBancaria destino, double monto) 
+            throws CuentaInactivaException, SaldoInsuficienteException {
+        
+        validarCuentaActiva(origen);
+        validarCuentaActiva(destino);
+        
+        BigDecimal montoBD = BigDecimal.valueOf(monto);
+
+        if (monto <= 0) {
+            throw new IllegalArgumentException("El monto a transferir debe ser mayor a cero.");
+        }
+        if (origen.getSaldo().compareTo(montoBD) < 0) {
+            throw new SaldoInsuficienteException("Saldo insuficiente en cuenta de origen.");
+        }
+
+        // Ejecución atómica
+        origen.setSaldo(origen.getSaldo().subtract(montoBD));
+        destino.setSaldo(destino.getSaldo().add(montoBD));
+
+        // Registro en ambas cuentas
+        registrarTransaccion(origen, TipoTransaccion.TRANSFERENCIA, monto, "Transferencia enviada a " + destino.getTitular());
+        registrarTransaccion(destino, TipoTransaccion.TRANSFERENCIA, monto, "Transferencia recibida de " + origen.getTitular());
+    }
+
+    /**
+     * CONSULTA DE SALDO: Devuelve el saldo actual como double para el Main.
+     */
+    public double consultarSaldo(CuentaBancaria cuenta) throws CuentaInactivaException {
+        validarCuentaActiva(cuenta);
+        // Según consigna, no modifica estado, así que solo retornamos el valor
+        return cuenta.getSaldo().doubleValue();
+    }
+
+    // ── MÉTODOS DE APOYO (PRIVADOS) ─────────────────────────────────────────
+
+    private void validarCuentaActiva(CuentaBancaria cuenta) throws CuentaInactivaException {
+        if (!cuenta.isActiva()) {
+            throw new CuentaInactivaException("Operación rechazada: Cuenta " + cuenta.getNumeroCuenta() + " inactiva.");
         }
     }
 
-    private String verHistorial(CuentaBancaria cuenta) {
-        List<Transaccion> historial = cuenta.getHistorialTransacciones();
-        if (historial.isEmpty()) {
-            return "No hay transacciones registradas en esta cuenta.";
-        }
-
-        System.out.println("\n--- ÚLTIMOS MOVIMIENTOS ---");
-        
-        // Cumpliendo el requisito: Mostrar solo las últimas 10 transacciones 
-        int inicio = Math.max(0, historial.size() - 10);
-        for (int i = inicio; i < historial.size(); i++) {
-            System.out.println(historial.get(i).obtenerLog());
-        }
-        
-        return "Fin del historial.";
+    private void registrarTransaccion(CuentaBancaria cuenta, TipoTransaccion tipo, double monto, String desc) {
+        // Creamos el objeto transacción y lo agregamos a la lista de la cuenta
+        Transaccion t = new Transaccion(tipo, monto, desc, cuenta.getSaldo().doubleValue());
+        cuenta.agregarTransaccion(t);
     }
 }
