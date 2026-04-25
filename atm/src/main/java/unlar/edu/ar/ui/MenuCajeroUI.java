@@ -1,4 +1,4 @@
-package service.service;
+package main.java.unlar.edu.ar.ui;
 
 import unlar.edu.ar.exception.CuentaInactivaException;
 import unlar.edu.ar.exception.LimiteExtraccionExcedidoException;
