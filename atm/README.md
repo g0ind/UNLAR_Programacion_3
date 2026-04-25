@@ -1,4 +1,4 @@
-🏧 * **Simulador de Cajero Automático (ATM)**
+🏧 **Simulador de Cajero Automático (ATM)**
 
 
 Institución: Universidad Nacional de La Rioja (UNLaR) - DACEFyN
