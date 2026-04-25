@@ -1,13 +1,14 @@
 🏧 Simulador de Cajero Automático (ATM)
-Institución: Universidad Nacional de La Rioja (UNLaR) - DACEFyN
 
+
+Institución: Universidad Nacional de La Rioja (UNLaR) - DACEFyN
 Asignatura: Programación III
 
 Trabajo Práctico: Nº 1.2 - Unidad 1
 
 👨‍💻 Integrantes del Equipo
-Pablo Galarza
 
+Pablo Galarza
 Chaile Marisa
 
 📝 Descripción del Proyecto
@@ -33,6 +34,7 @@ Historial y Auditoría: Registro detallado de cada operación utilizando StringB
 Interfaz de Usuario: Menú interactivo por consola implementado con switch expressions y validación robusta de entradas numéricas (InputMismatchException) para evitar cierres inesperados.
 
 🛡️ Manejo de Excepciones
+
 El sistema implementa una jerarquía de excepciones personalizadas para controlar la lógica de negocio:
 
 SaldoInsuficienteException
@@ -40,7 +42,9 @@ SaldoInsuficienteException
 LimiteExtraccionExcedidoException
 
 CuentaInactivaException
+
 🏗️ Arquitectura y Estructura de Paquetes
+
 El proyecto respeta una arquitectura estricta dividida en capas funcionales:
 
 unlar.edu.ar.model: Entidades del dominio (CuentaBancaria, Transaccion, TipoTransaccion).
@@ -54,6 +58,7 @@ unlar.edu.ar.ui: Interfaz gráfica de consola (MenuCajeroUI).
 unlar.edu.ar.util: Herramientas de formateo de moneda y fechas.
 
 🛠️ Cómo ejecutar el proyecto
+
 Clona este repositorio en tu máquina local.
 
 Abre el proyecto en tu IDE de preferencia (Visual Studio Code, IntelliJ IDEA, Eclipse).
