@@ -18,7 +18,7 @@ public class Main {
         
         CajeroService cajeroService = new CajeroService();
 
-        // Inicialización de 3 cuentas requeridas
+        // Los objetos CuentaBancaria sí usan BigDecimal en su constructor según tu modelo
         CuentaBancaria cuenta1 = new CuentaBancaria("CUENTA-001", "Ana Garcia", new BigDecimal("50000.00"));
         CuentaBancaria cuenta2 = new CuentaBancaria("CUENTA-002", "Luis Perez", new BigDecimal("15000.00"));
         CuentaBancaria cuenta3 = new CuentaBancaria("CUENTA-003", "Maria Lopez", new BigDecimal("2000.00"));
@@ -26,83 +26,62 @@ public class Main {
         System.out.println("\n--- EJECUTANDO 15 TRANSACCIONES AUTOMÁTICAS ---");
 
         try {
-            // ==========================================
-            // □ CONSULTA DE SALDO (Sin modificar estado)
-            // ==========================================
+            // CONSULTAS DE SALDO
             System.out.println("\n>> CONSULTAS DE SALDO:");
             System.out.println("T1 - Saldo C1: " + FormatoUtil.formatearMoneda(cuenta1.getSaldo().doubleValue()));
             System.out.println("T2 - Saldo C2: " + FormatoUtil.formatearMoneda(cuenta2.getSaldo().doubleValue()));
             System.out.println("T3 - Saldo C3: " + FormatoUtil.formatearMoneda(cuenta3.getSaldo().doubleValue()));
 
-            // ==========================================
-            // □ DEPÓSITO (Validar monto positivo, actualizar, registrar)
-            // ==========================================
+            // DEPÓSITOS (Corregido: pasamos double directo)
             System.out.println("\n>> DEPÓSITOS:");
-            cajeroService.depositar(cuenta1, new BigDecimal("5000.00")); // T4
-            System.out.println("T4 - Depósito exitoso en C1. Nuevo saldo: " + FormatoUtil.formatearMoneda(cuenta1.getSaldo().doubleValue()));
+            cajeroService.depositar(cuenta1, 5000.00); // T4
+            cajeroService.depositar(cuenta2, 3000.00); // T5
+            cajeroService.depositar(cuenta3, 1500.00); // T6
             
-            cajeroService.depositar(cuenta2, new BigDecimal("3000.00")); // T5
-            System.out.println("T5 - Depósito exitoso en C2. Nuevo saldo: " + FormatoUtil.formatearMoneda(cuenta2.getSaldo().doubleValue()));
-            
-            cajeroService.depositar(cuenta3, new BigDecimal("1500.00")); // T6
-            System.out.println("T6 - Depósito exitoso en C3. Nuevo saldo: " + FormatoUtil.formatearMoneda(cuenta3.getSaldo().doubleValue()));
+            System.out.println("T4, T5 y T6 completadas.");
 
-            // ==========================================
-            // □ EXTRACCIÓN (Validar saldo, límite diario, actualizar)
-            // ==========================================
+            // EXTRACCIONES (Corregido: pasamos double directo)
             System.out.println("\n>> EXTRACCIONES:");
-            cajeroService.extraer(cuenta1, new BigDecimal("8000.00")); // T7 (Válida)
-            System.out.println("T7 - Extracción exitosa C1.");
-            
-            cajeroService.extraer(cuenta2, new BigDecimal("1000.00")); // T8 (Válida)
-            System.out.println("T8 - Extracción exitosa C2.");
-            
-            cajeroService.extraer(cuenta3, new BigDecimal("500.00"));  // T9 (Válida)
-            System.out.println("T9 - Extracción exitosa C3.");
+            cajeroService.extraer(cuenta1, 8000.00); // T7
+            cajeroService.extraer(cuenta2, 1000.00); // T8
+            cajeroService.extraer(cuenta3, 500.00);  // T9
+            System.out.println("T7, T8 y T9 completadas.");
 
-            // ==========================================
-            // □ TRANSFERENCIA (Transacción atómica entre cuentas)
-            // ==========================================
+            // TRANSFERENCIAS (Corregido: pasamos double directo)
             System.out.println("\n>> TRANSFERENCIAS:");
-            cajeroService.transferir(cuenta1, cuenta2, new BigDecimal("2000.00")); // T10
-            System.out.println("T10 - Transferencia de C1 a C2 por $2,000.00 exitosa.");
-            
-            cajeroService.transferir(cuenta2, cuenta3, new BigDecimal("1000.00")); // T11
-            System.out.println("T11 - Transferencia de C2 a C3 por $1,000.00 exitosa.");
-            
-            cajeroService.transferir(cuenta3, cuenta1, new BigDecimal("500.00"));  // T12
-            System.out.println("T12 - Transferencia de C3 a C1 por $500.00 exitosa.");
+            cajeroService.transferir(cuenta1, cuenta2, 2000.00); // T10
+            cajeroService.transferir(cuenta2, cuenta3, 1000.00); // T11
+            cajeroService.transferir(cuenta3, cuenta1, 500.00);  // T12
+            System.out.println("T10, T11 y T12 completadas.");
 
         } catch (Exception e) {
-            System.out.println("Error inesperado en transacciones válidas: " + e.getMessage());
+            System.out.println("Error inesperado: " + e.getMessage());
         }
 
-        // ==========================================
-        // EXCEPCIONES FORZADAS (Manejo de errores del TP)
-        // ==========================================
+        // EXCEPCIONES FORZADAS
         System.out.println("\n>> FORZANDO EXCEPCIONES:");
 
-        // T13 - Forzando Límite Excedido (Límite es $10,000 según TP)
+        // T13 - Límite Excedido
         try {
             System.out.println("T13 - Intentando extraer $15,000 de C1...");
-            cajeroService.extraer(cuenta1, new BigDecimal("15000.00"));
+            cajeroService.extraer(cuenta1, 15000.00);
         } catch (LimiteExtraccionExcedidoException | SaldoInsuficienteException | CuentaInactivaException e) {
             System.out.println("--> EXCEPCIÓN ATRAPADA: " + e.getMessage());
         }
 
-        // T14 - Forzando Saldo Insuficiente
+        // T14 - Saldo Insuficiente
         try {
             System.out.println("T14 - Intentando transferir $100,000 de C2 a C3...");
-            cajeroService.transferir(cuenta2, cuenta3, new BigDecimal("100000.00"));
-        } catch (LimiteExtraccionExcedidoException | SaldoInsuficienteException | CuentaInactivaException e) {
+            cajeroService.transferir(cuenta2, cuenta3, 100000.00);
+        } catch (SaldoInsuficienteException | CuentaInactivaException e) {
             System.out.println("--> EXCEPCIÓN ATRAPADA: " + e.getMessage());
         }
 
-        // T15 - Forzando Cuenta Inactiva
+        // T15 - Cuenta Inactiva
         try {
             System.out.println("T15 - Desactivando C3 e intentando extraer...");
-            cuenta3.setActiva(false); // Inactivación administrativa
-            cajeroService.extraer(cuenta3, new BigDecimal("100.00"));
+            cuenta3.setActiva(false);
+            cajeroService.extraer(cuenta3, 100.00);
         } catch (LimiteExtraccionExcedidoException | SaldoInsuficienteException | CuentaInactivaException e) {
             System.out.println("--> EXCEPCIÓN ATRAPADA: " + e.getMessage());
         }
@@ -111,7 +90,6 @@ public class Main {
         System.out.println("SIMULACIÓN FINALIZADA - ABRIENDO UI");
         System.out.println("==========================================\n");
 
-        // Abrimos la interfaz gráfica de consola usando la cuenta 1 para probar manualmente
         MenuCajeroUI ui = new MenuCajeroUI(cajeroService);
         ui.iniciar(cuenta1);
     }
