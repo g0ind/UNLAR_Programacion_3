@@ -17,49 +17,49 @@ Este repositorio contiene el código fuente de un simulador de Cajero Automátic
 🚀 Funcionalidades Principales
 El sistema cumple con los siguientes requisitos funcionales:
 
-Gestión de Cuentas: Soporte para múltiples cuentas bancarias con control de estado (activas/inactivas) e inmutabilidad estricta en el número de cuenta.
+* **Gestión de Cuentas: Soporte para múltiples cuentas bancarias con control de estado (activas/inactivas) e inmutabilidad estricta en el número de cuenta.**
 
-Operaciones Bancarias:
+  Operaciones Bancarias:
 
-Depósitos: Validación de montos positivos y actualización de saldo.
+* **Depósitos: Validación de montos positivos y actualización de saldo.**
 
-Extracciones: Control de saldo disponible y validación de límite de extracción ($10,000 por operación).
+* **Extracciones: Control de saldo disponible y validación de límite de extracción ($10,000 por operación).**
 
-Transferencias: Operaciones atómicas entre cuentas registradas en el sistema.
+* **Transferencias: Operaciones atómicas entre cuentas registradas en el sistema.**
 
-Consultas de Saldo: Operaciones de lectura que no modifican el estado de la cuenta.
+* **Consultas de Saldo: Operaciones de lectura que no modifican el estado de la cuenta.**
 
-Historial y Auditoría: Registro detallado de cada operación utilizando StringBuilder. Cada registro incluye timestamp, tipo de transacción, monto y saldo resultante. Se limita la visualización a los últimos 10 movimientos.
+* **Historial y Auditoría: Registro detallado de cada operación utilizando StringBuilder. Cada registro incluye timestamp, tipo de transacción, monto y saldo resultante. Se limita la visualización a los últimos 10 movimientos.**
 
-Interfaz de Usuario: Menú interactivo por consola implementado con switch expressions y validación robusta de entradas numéricas (InputMismatchException) para evitar cierres inesperados.
+* **Interfaz de Usuario: Menú interactivo por consola implementado con switch expressions y validación robusta de entradas numéricas (InputMismatchException) para evitar cierres inesperados.**
 
 🛡️ Manejo de Excepciones
 
 El sistema implementa una jerarquía de excepciones personalizadas para controlar la lógica de negocio:
 
-SaldoInsuficienteException
+* **SaldoInsuficienteException**
 
-LimiteExtraccionExcedidoException
+* **LimiteExtraccionExcedidoException**
 
-CuentaInactivaException
+* **CuentaInactivaException**
 
 🏗️ Arquitectura y Estructura de Paquetes
 
 El proyecto respeta una arquitectura estricta dividida en capas funcionales:
 
-unlar.edu.ar.model: Entidades del dominio (CuentaBancaria, Transaccion, TipoTransaccion).
+* **unlar.edu.ar.model: Entidades del dominio (CuentaBancaria, Transaccion, TipoTransaccion).**
 
-unlar.edu.ar.exception: Excepciones de negocio.
+* **unlar.edu.ar.exception: Excepciones de negocio.**
 
-unlar.edu.ar.service: Lógica principal y reglas de negocio (CajeroService).
+* **unlar.edu.ar.service: Lógica principal y reglas de negocio (CajeroService).**
 
-unlar.edu.ar.ui: Interfaz gráfica de consola (MenuCajeroUI).
+* **unlar.edu.ar.ui: Interfaz gráfica de consola (MenuCajeroUI).**
 
-unlar.edu.ar.util: Herramientas de formateo de moneda y fechas.
+* **unlar.edu.ar.util: Herramientas de formateo de moneda y fechas.**
 
 🛠️ Cómo ejecutar el proyecto
 
-Clona este repositorio en tu máquina local.
+Clonar este repositorio en tu máquina local.
 
 Abre el proyecto en tu IDE de preferencia (Visual Studio Code, IntelliJ IDEA, Eclipse).
 
