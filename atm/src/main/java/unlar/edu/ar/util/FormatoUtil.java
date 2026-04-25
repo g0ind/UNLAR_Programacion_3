@@ -9,7 +9,7 @@ import java.util.Locale;
 public class FormatoUtil {
     
     /**
-     * Da formato a la moneda según el requisito: $XXX,XXX.00
+     * Da formato a la moneda según el requisito
      */
     public static String formatearMoneda(double monto) {
         // Usamos Locale.US para asegurar que el separador de miles sea ',' y el decimal '.'
