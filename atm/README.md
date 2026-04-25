@@ -6,20 +6,20 @@ Asignatura: Programación III
 
 Trabajo Práctico: Nº 1.2 - Unidad 1
 
-👨‍💻 Integrantes del Equipo
+👨‍💻 **Integrantes del Equipo**
 
 * **Pablo Galarza**
 * **Chaile Marisa**
 
-📝 Descripción del Proyecto
+📝 **Descripción del Proyecto**
 Este repositorio contiene el código fuente de un simulador de Cajero Automático (ATM) desarrollado en Java. El objetivo educativo principal de este proyecto es introducir y aplicar conceptos de Programación Orientada a Objetos (POO) avanzada, tales como el manejo del estado, la inmutabilidad, el encapsulamiento estricto y el manejo de errores en sistemas transaccionales.
 
-🚀 Funcionalidades Principales
+🚀 **Funcionalidades Principales**
 El sistema cumple con los siguientes requisitos funcionales:
 
 * **Gestión de Cuentas: Soporte para múltiples cuentas bancarias con control de estado (activas/inactivas) e inmutabilidad estricta en el número de cuenta.**
 
-  Operaciones Bancarias:
+  **Operaciones Bancarias:**
 
 * **Depósitos: Validación de montos positivos y actualización de saldo.**
 
@@ -33,7 +33,7 @@ El sistema cumple con los siguientes requisitos funcionales:
 
 * **Interfaz de Usuario: Menú interactivo por consola implementado con switch expressions y validación robusta de entradas numéricas (InputMismatchException) para evitar cierres inesperados.**
 
-🛡️ Manejo de Excepciones
+🛡️**Manejo de Excepciones**
 
 El sistema implementa una jerarquía de excepciones personalizadas para controlar la lógica de negocio:
 
@@ -43,7 +43,7 @@ El sistema implementa una jerarquía de excepciones personalizadas para controla
 
 * **CuentaInactivaException**
 
-🏗️ Arquitectura y Estructura de Paquetes
+🏗️**Arquitectura y Estructura de Paquetes**
 
 El proyecto respeta una arquitectura estricta dividida en capas funcionales:
 
@@ -57,7 +57,7 @@ El proyecto respeta una arquitectura estricta dividida en capas funcionales:
 
 * **unlar.edu.ar.util: Herramientas de formateo de moneda y fechas.**
 
-🛠️ Cómo ejecutar el proyecto
+🛠️ **Cómo ejecutar el proyecto**
 
 Clonar este repositorio en tu máquina local.
 
