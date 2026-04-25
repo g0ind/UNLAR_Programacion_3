@@ -8,8 +8,8 @@ Trabajo Práctico: Nº 1.2 - Unidad 1
 
 👨‍💻 Integrantes del Equipo
 
-Pablo Galarza
-Chaile Marisa
+* **Pablo Galarza**
+* **Chaile Marisa**
 
 📝 Descripción del Proyecto
 Este repositorio contiene el código fuente de un simulador de Cajero Automático (ATM) desarrollado en Java. El objetivo educativo principal de este proyecto es introducir y aplicar conceptos de Programación Orientada a Objetos (POO) avanzada, tales como el manejo del estado, la inmutabilidad, el encapsulamiento estricto y el manejo de errores en sistemas transaccionales.
