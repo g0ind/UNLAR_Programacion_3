@@ -1,4 +1,9 @@
-package main.java.unlar.edu.ar.ui;
+package unlar.edu.ar.ui;
+
+import java.math.BigDecimal;
+import java.util.InputMismatchException;
+import java.util.List;
+import java.util.Scanner;
 
 import unlar.edu.ar.exception.CuentaInactivaException;
 import unlar.edu.ar.exception.LimiteExtraccionExcedidoException;
@@ -7,11 +12,6 @@ import unlar.edu.ar.model.CuentaBancaria;
 import unlar.edu.ar.model.Transaccion;
 import unlar.edu.ar.service.CajeroService;
 import unlar.edu.ar.util.FormatoUtil;
-
-import java.math.BigDecimal;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Scanner;
 
 public class MenuCajeroUI {
     private final CajeroService cajeroService;
@@ -71,7 +71,12 @@ public class MenuCajeroUI {
     }
 
     private String consultarSaldo(CuentaBancaria cuenta) {
-        return "Su saldo actual es: " + FormatoUtil.formatearMoneda(cuenta.getSaldo().doubleValue());
+        try {
+            double saldo = cajeroService.consultarSaldo(cuenta);
+            return "Su saldo actual es: " + FormatoUtil.formatearMoneda(saldo);
+        } catch (CuentaInactivaException e) {
+            return "ERROR: " + e.getMessage();
+        }
     }
 
     private String realizarDeposito(CuentaBancaria cuenta) {
@@ -80,13 +85,13 @@ public class MenuCajeroUI {
             double monto = scanner.nextDouble();
             scanner.nextLine();
             
-            cajeroService.depositar(cuenta, BigDecimal.valueOf(monto));
+            cajeroService.depositar(cuenta, monto);
             return "Depósito de " + FormatoUtil.formatearMoneda(monto) + " realizado con éxito.";
             
         } catch (InputMismatchException e) {
             scanner.nextLine();
             return "Operación cancelada: El monto ingresado no es válido.";
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | CuentaInactivaException e) {
             return "OPERACIÓN RECHAZADA: " + e.getMessage();
         }
     }
@@ -97,8 +102,7 @@ public class MenuCajeroUI {
             double monto = scanner.nextDouble();
             scanner.nextLine();
 
-            // Aquí atrapamos las excepciones comprobadas que armamos antes
-            cajeroService.extraer(cuenta, BigDecimal.valueOf(monto));
+            cajeroService.extraer(cuenta, monto);
             return "Extracción exitosa. Por favor, retire sus " + FormatoUtil.formatearMoneda(monto) + ".";
 
         } catch (InputMismatchException e) {
@@ -118,11 +122,11 @@ public class MenuCajeroUI {
             double monto = scanner.nextDouble();
             scanner.nextLine();
 
-            // Para simplificar la interfaz visual de la consola, creamos una cuenta "falsa" solo para 
-            // representar el destino, ya que en un sistema real buscaríamos en una base de datos.
-            CuentaBancaria cuentaDestino = new CuentaBancaria(cuentaDestinoStr, "Destinatario", BigDecimal.ZERO);
+            // Creamos cuenta destino activa para la simulación
+            CuentaBancaria cuentaDestino = new CuentaBancaria(cuentaDestinoStr, "Destinatario Simulado", BigDecimal.ZERO);
+            cuentaDestino.setActiva(true); 
             
-            cajeroService.transferir(cuentaOrigen, cuentaDestino, BigDecimal.valueOf(monto));
+            cajeroService.transferir(cuentaOrigen, cuentaDestino, monto);
             return "Transferencia de " + FormatoUtil.formatearMoneda(monto) + " enviada a la cuenta " + cuentaDestinoStr + ".";
 
         } catch (InputMismatchException e) {
@@ -140,8 +144,6 @@ public class MenuCajeroUI {
         }
 
         System.out.println("\n--- ÚLTIMOS MOVIMIENTOS ---");
-        
-        // Cumpliendo el requisito: Mostrar solo las últimas 10 transacciones 
         int inicio = Math.max(0, historial.size() - 10);
         for (int i = inicio; i < historial.size(); i++) {
             System.out.println(historial.get(i).obtenerLog());
