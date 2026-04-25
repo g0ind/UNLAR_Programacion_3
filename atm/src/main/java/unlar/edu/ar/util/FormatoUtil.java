@@ -18,9 +18,7 @@ public class FormatoUtil {
         return df.format(monto);
     }
 
-    /**
-     * Da formato a la fecha para el log de transacciones
-     */
+
     public static String formatearFechaHora(LocalDateTime fechaHora) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         return fechaHora.format(formatter);
