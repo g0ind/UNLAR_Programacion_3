@@ -1,5 +1,8 @@
-package UNLAR_Programacion_3.atm.src.model;
+package unlar.edu.ar.model;
 
 public enum TipoTransaccion {
-    DEPOSITO, EXTRACCION, TRANSFERENCIA, CONSULTA
+    DEPOSITO,
+    EXTRACCION,
+    TRANSFERENCIA,
+    CONSULTA
 }
