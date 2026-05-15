@@ -19,9 +19,9 @@ public class Main {
         CajeroService cajeroService = new CajeroService();
 
         // Los objetos CuentaBancaria sí usan BigDecimal en su constructor según tu modelo
-        CuentaBancaria cuenta1 = new CuentaBancaria("CUENTA-001", "Ana Garcia", new BigDecimal("50000.00"));
-        CuentaBancaria cuenta2 = new CuentaBancaria("CUENTA-002", "Luis Perez", new BigDecimal("15000.00"));
-        CuentaBancaria cuenta3 = new CuentaBancaria("CUENTA-003", "Maria Lopez", new BigDecimal("2000.00"));
+        CuentaBancaria cuenta1 = new CuentaBancaria("CUENTA-001", "Pablo Galarza", new BigDecimal("50000.00"));
+        CuentaBancaria cuenta2 = new CuentaBancaria("CUENTA-002", "Marisa Chaile", new BigDecimal("15000.00"));
+        CuentaBancaria cuenta3 = new CuentaBancaria("CUENTA-003", "Google Gemini", new BigDecimal("2000.00"));
 
         System.out.println("\n--- EJECUTANDO 15 TRANSACCIONES AUTOMÁTICAS ---");
 

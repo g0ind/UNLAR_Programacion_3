@@ -8,10 +8,10 @@
 		<version>4.0.6</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.streaming</groupId>
-	<artifactId>music</artifactId>
+	<groupId>unlar.edu.ar</groupId>
+	<artifactId>streaming_music</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>music</name>
+	<name>streaming_music</name>
 	<description/>
 	<url/>
 	<licenses>
