@@ -1,9 +1,15 @@
 package com.streaming.music.repository;
 
-import com.streaming.music.model.Productora;
-import org.springframework.stereotype.Repository;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+
+import org.springframework.stereotype.Repository;
+
+import com.streaming.music.model.Productora;
 
 @Repository
 public class ProductoraRepository {
@@ -28,5 +34,10 @@ public class ProductoraRepository {
     
     public boolean existsById(UUID id) {
         return productoras.containsKey(id);
+    }
+
+    public void update(Productora productora) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'update'");
     }
 }
