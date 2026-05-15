@@ -35,4 +35,5 @@ mvn clean compile
 mvn spring-boot:run
 
 Diagrama de Clases
-![alt text](image.png)
+<img width="1265" height="1600" alt="image" src="https://github.com/user-attachments/assets/ecfebf2d-7ddb-4603-bc57-f7e035637878" />
+
