@@ -1,11 +1,13 @@
 package com.streaming.music.service.estrategia;
 
-import com.streaming.music.model.Cancion;
-import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Component;
+
+import com.streaming.music.model.Cancion;
 
 @Component
 public class RecomendacionDescubrimiento implements EstrategiaRecomendacion {
