@@ -1,4 +1,4 @@
-# 🎵 Streaming Music API - TP Algoritmos Fundamentales
+# 🎵 Streaming Music - 
 
 ## 📋 Descripción del Trabajo Práctico
 
