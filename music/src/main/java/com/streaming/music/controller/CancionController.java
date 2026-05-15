@@ -171,27 +171,19 @@ public class CancionController {
         return ResponseEntity.ok(cancionService.busquedaLineal(genero, anoMinimo, ratingMinimo));
     }
 
-    @GetMapping("/busqueda-binaria")
-    @Operation(summary = "Búsqueda binaria por título",
-               description = "Algoritmo O(log n) que busca una canción por su título exacto (requiere lista ordenada)")
-    @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Canción encontrada"),
-        @ApiResponse(responseCode = "404", description = "Canción no encontrada")
-    })
-    public ResponseEntity<?> busquedaBinaria(@RequestParam String titulo) {
-        return cancionService.busquedaBinariaPorTitulo(titulo)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body(Map.of("error", "Canción no encontrada con título: " + titulo)));
-    }
-
-    @GetMapping("/ordenar")
-    @Operation(summary = "Ordenamiento personalizado",
-               description = "Ordena canciones por artista y luego por fecha de lanzamiento descendente")
-    @ApiResponse(responseCode = "200", description = "Ordenamiento exitoso")
-    public ResponseEntity<List<CancionDTO>> ordenarPersonalizado() {
-        return ResponseEntity.ok(cancionService.ordenarPersonalizado());
-    }
+@GetMapping("/busqueda-binaria")
+@Operation(summary = "Búsqueda binaria por título",
+           description = "Algoritmo O(log n) que busca una canción por su título exacto")
+@ApiResponses({
+    @ApiResponse(responseCode = "200", description = "Canción encontrada"),
+    @ApiResponse(responseCode = "404", description = "Canción no encontrada")
+})
+public ResponseEntity<?> busquedaBinaria(@RequestParam String titulo) {
+    return cancionService.busquedaBinariaPorTitulo(titulo)
+            .<ResponseEntity<?>>map(ResponseEntity::ok)
+            .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "Canción no encontrada con título: " + titulo)));
+}
 
     // ==================== PLAYLIST AUTOMÁTICA ====================
 
