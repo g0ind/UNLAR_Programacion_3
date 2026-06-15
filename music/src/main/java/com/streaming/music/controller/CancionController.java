@@ -133,7 +133,8 @@ public class CancionController {
 
     @GetMapping("/estadisticas/promedio-duracion")
     @Operation(summary = "Promedio de duración por género", 
-               description = "Calcula el promedio de duración en segundos agrupado por género (Collectors.averagingInt)")
+               description = "Calcula el promedio de duración en segundos agrupado por género (Collectors.averagingInt)",
+               tags = {"Estadísticas"})
     @ApiResponse(responseCode = "200", description = "Estadísticas calculadas")
     public ResponseEntity<Map<String, Double>> promedioDuracionPorGenero() {
         return ResponseEntity.ok(cancionService.promedioDuracionPorGenero());
@@ -141,7 +142,8 @@ public class CancionController {
 
     @GetMapping("/estadisticas/artista-popular")
     @Operation(summary = "Artista más popular", 
-               description = "Determina el artista con más reproducciones totales (Collectors.maxBy)")
+               description = "Determina el artista con más reproducciones totales (Collectors.maxBy)",
+               tags = {"Estadísticas"})
     @ApiResponse(responseCode = "200", description = "Artista más popular encontrado")
     public ResponseEntity<Map<String, Object>> artistaMasPopular() {
         return ResponseEntity.ok(cancionService.artistaMasPopular());
@@ -149,7 +151,8 @@ public class CancionController {
 
     @GetMapping("/estadisticas/distribucion-decadas")
     @Operation(summary = "Distribución por décadas", 
-               description = "Agrupa canciones por década de lanzamiento (Collectors.groupingBy)")
+               description = "Agrupa canciones por década de lanzamiento (Collectors.groupingBy)",
+               tags = {"Estadísticas"})
     @ApiResponse(responseCode = "200", description = "Distribución calculada")
     public ResponseEntity<Map<Integer, Long>> distribucionPorDecadas() {
         return ResponseEntity.ok(cancionService.distribucionPorDecadas());
