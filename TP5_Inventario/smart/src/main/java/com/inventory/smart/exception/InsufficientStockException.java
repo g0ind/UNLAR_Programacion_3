@@ -10,9 +10,6 @@ package com.inventory.smart.exception;
  */
 public class InsufficientStockException extends RuntimeException {
 
-<<<<<<< HEAD
-}
-=======
     /**
      * El identificador del producto afectado por la insuficiencia de stock.
      */
@@ -54,4 +51,3 @@ public class InsufficientStockException extends RuntimeException {
         return stockDisponible;
     }
 }
->>>>>>> 3bafdfd5b101e0efba743dc15016211a11568aa6

@@ -1,11 +1,17 @@
 package com.inventory.smart.service;
 
-import com.inventory.smart.model.Categoria;
-import com.inventory.smart.model.Producto;
-import com.inventory.smart.model.NivelAlerta;
-import org.springframework.stereotype.Service;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import org.springframework.stereotype.Service;
+
+import com.inventory.smart.model.Categoria;
+import com.inventory.smart.model.NivelAlerta;
+import com.inventory.smart.model.Producto;
 
 /**
  * Servicio encargado de generar el reporte de performance Big O empírico.
@@ -19,9 +25,6 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class PerformanceReportService {
 
-<<<<<<< HEAD
-}
-=======
     private final IAlertaStrategy alertaStrategy;
 
     /**
@@ -131,4 +134,3 @@ public class PerformanceReportService {
         return resultados;
     }
 }
->>>>>>> 3bafdfd5b101e0efba743dc15016211a11568aa6

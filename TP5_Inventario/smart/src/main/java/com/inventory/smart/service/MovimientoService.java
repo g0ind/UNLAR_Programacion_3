@@ -2,9 +2,6 @@ package com.inventory.smart.service;
 
 import java.util.List;
 
-<<<<<<< HEAD
-}
-=======
 import com.inventory.smart.dto.MovimientoRequest;
 import com.inventory.smart.dto.MovimientoResponse;
 
@@ -35,4 +32,3 @@ public interface MovimientoService {
      */
     List<MovimientoResponse> getHistorialPorProducto(Long productoId);
 }
->>>>>>> 3bafdfd5b101e0efba743dc15016211a11568aa6

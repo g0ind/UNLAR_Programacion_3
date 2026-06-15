@@ -22,9 +22,6 @@ import java.util.List;
 @RequestMapping("/api/movimientos")
 public class MovimientoController {
 
-<<<<<<< HEAD
-}
-=======
     private final MovimientoService movimientoService;
 
     /**
@@ -58,4 +55,3 @@ public class MovimientoController {
         return ResponseEntity.ok(movimientoService.getHistorialPorProducto(id));
     }
 }
->>>>>>> 3bafdfd5b101e0efba743dc15016211a11568aa6

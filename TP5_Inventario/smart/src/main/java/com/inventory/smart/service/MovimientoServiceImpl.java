@@ -13,9 +13,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 
-<<<<<<< HEAD
-}
-=======
 /**
  * Implementación de {@link MovimientoService} para registrar y consultar movimientos.
  *
@@ -129,4 +126,3 @@ public class MovimientoServiceImpl implements MovimientoService {
         );
     }
 }
->>>>>>> 3bafdfd5b101e0efba743dc15016211a11568aa6

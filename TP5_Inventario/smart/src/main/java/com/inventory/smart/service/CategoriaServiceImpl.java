@@ -11,9 +11,6 @@ import com.inventory.smart.repository.ProductoRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
-<<<<<<< HEAD
-}
-=======
 /**
  * Implementación de {@link CategoriaService} para gestionar las categorías.
  *
@@ -130,4 +127,3 @@ public class CategoriaServiceImpl implements CategoriaService {
         return new CategoriaResponse(c.getId(), c.getNombre());
     }
 }
->>>>>>> 3bafdfd5b101e0efba743dc15016211a11568aa6

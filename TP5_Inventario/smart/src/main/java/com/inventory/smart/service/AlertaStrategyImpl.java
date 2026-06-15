@@ -1,10 +1,8 @@
 package com.inventory.smart.service;
 
-<<<<<<< HEAD
-public class AlertaStrategyImpl {
-=======
-import com.inventory.smart.model.NivelAlerta;
 import org.springframework.stereotype.Component;
+
+import com.inventory.smart.model.NivelAlerta;
 
 /**
  * Estrategia por defecto para evaluar alertas de stock.
@@ -44,5 +42,4 @@ public class AlertaStrategyImpl implements IAlertaStrategy {
             return NivelAlerta.NORMAL;
         }
     }
->>>>>>> 3bafdfd5b101e0efba743dc15016211a11568aa6
 }

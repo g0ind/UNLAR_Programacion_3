@@ -22,9 +22,6 @@ import com.inventory.smart.service.PerformanceReportService;
 @RestController
 public class AlertaController {
 
-<<<<<<< HEAD
-}
-=======
     private final AlertaService alertaService;
     private final PerformanceReportService performanceReportService;
 
@@ -59,4 +56,3 @@ public class AlertaController {
         return ResponseEntity.ok(performanceReportService.generarReporte());
     }
 }
->>>>>>> 3bafdfd5b101e0efba743dc15016211a11568aa6

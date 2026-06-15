@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 package com.inventory.smart.controller;
 
 import com.inventory.smart.dto.CategoriaRequest;
@@ -100,4 +98,3 @@ public class CategoriaController {
         return ResponseEntity.noContent().build();
     }
 }
->>>>>>> 3bafdfd5b101e0efba743dc15016211a11568aa6

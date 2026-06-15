@@ -1,14 +1,13 @@
 package com.inventory.smart.service;
 
-<<<<<<< HEAD
-public class AlertaServiceImpl {
-=======
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import com.inventory.smart.config.StockConfig;
 import com.inventory.smart.dto.AlertaStockResponse;
 import com.inventory.smart.model.NivelAlerta;
 import com.inventory.smart.repository.ProductoRepository;
-import org.springframework.stereotype.Service;
-import java.util.List;
 
 /**
  * Implementación de {@link AlertaService} utilizando el patrón Strategy para la evaluación.
@@ -57,5 +56,4 @@ public class AlertaServiceImpl implements AlertaService {
                 .filter(a -> a.nivelAlerta() != NivelAlerta.NORMAL)
                 .toList();
     }
->>>>>>> 3bafdfd5b101e0efba743dc15016211a11568aa6
 }

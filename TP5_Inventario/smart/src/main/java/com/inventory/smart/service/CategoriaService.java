@@ -2,9 +2,6 @@ package com.inventory.smart.service;
 
 import java.util.List;
 
-<<<<<<< HEAD
-}
-=======
 import com.inventory.smart.dto.CategoriaRequest;
 import com.inventory.smart.dto.CategoriaResponse;
 
@@ -57,6 +54,6 @@ public interface CategoriaService {
      *
      * @param id el identificador de la categoría a eliminar
      */
+    /*chea cambio*/
     void deleteById(Long id);
 }
->>>>>>> 3bafdfd5b101e0efba743dc15016211a11568aa6

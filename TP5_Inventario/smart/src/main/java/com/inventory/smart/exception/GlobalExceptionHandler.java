@@ -22,9 +22,6 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-<<<<<<< HEAD
-}
-=======
     /**
      * Constructor por defecto de la clase.
      */
@@ -116,4 +113,3 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
     }
 }
->>>>>>> 3bafdfd5b101e0efba743dc15016211a11568aa6

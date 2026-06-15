@@ -22,9 +22,6 @@ import java.util.List;
 @RequestMapping("/api/productos")
 public class ProductoController {
 
-<<<<<<< HEAD
-}
-=======
     private final ProductoService productoService;
 
     /**
@@ -132,4 +129,3 @@ public class ProductoController {
         return ResponseEntity.ok(productoService.listarOrdenados(campo, orden));
     }
 }
->>>>>>> 3bafdfd5b101e0efba743dc15016211a11568aa6

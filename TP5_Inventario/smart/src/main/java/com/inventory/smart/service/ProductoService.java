@@ -2,9 +2,6 @@ package com.inventory.smart.service;
 
 import java.util.List;
 
-<<<<<<< HEAD
-}
-=======
 import com.inventory.smart.dto.ProductoRequest;
 import com.inventory.smart.dto.ProductoResponse;
 
@@ -79,4 +76,3 @@ public interface ProductoService {
      */
     List<ProductoResponse> listarOrdenados(String campo, String orden);
 }
->>>>>>> 3bafdfd5b101e0efba743dc15016211a11568aa6

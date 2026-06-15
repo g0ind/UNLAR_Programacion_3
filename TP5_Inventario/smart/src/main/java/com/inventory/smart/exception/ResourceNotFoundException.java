@@ -10,9 +10,6 @@ package com.inventory.smart.exception;
  */
 public class ResourceNotFoundException extends RuntimeException {
 
-<<<<<<< HEAD
-}
-=======
     /**
      * Crea una nueva instancia con un mensaje descriptivo.
      *
@@ -22,4 +19,3 @@ public class ResourceNotFoundException extends RuntimeException {
         super(message);
     }
 }
->>>>>>> 3bafdfd5b101e0efba743dc15016211a11568aa6
