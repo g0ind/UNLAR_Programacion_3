@@ -1,0 +1,1616 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warehouse IQ — Gestión de Inventario Inteligente</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #0b0f19;
+            --bg-surface: #151c2c;
+            --bg-card: #1e2640;
+            --border-color: #2b3554;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            
+            --color-primary: #6366f1;
+            --color-primary-glow: rgba(99, 102, 241, 0.15);
+            --color-secondary: #06b6d4;
+            --color-secondary-glow: rgba(6, 182, 212, 0.15);
+            
+            --color-success: #10b981;
+            --color-warning: #f59e0b;
+            --color-danger: #ef4444;
+            --color-danger-glow: rgba(239, 68, 68, 0.15);
+            
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+            
+            --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.15);
+            --shadow-card: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+            
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Navbar */
+        header {
+            background-color: var(--bg-surface);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1.25rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-card);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .brand-logo {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.5rem;
+            box-shadow: 0 0 15px var(--color-primary);
+        }
+
+        .brand-title h1 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            background: linear-gradient(to right, #ffffff, #a5b4fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .brand-title p {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 0.6rem 1.2rem;
+            border-radius: var(--radius-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-btn:hover {
+            color: var(--text-primary);
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-btn.active {
+            color: #ffffff;
+            background: linear-gradient(135deg, var(--color-primary), rgba(99, 102, 241, 0.6));
+            box-shadow: var(--shadow-glow);
+        }
+
+        /* Main Layout */
+        main {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        /* Dashboard Overview Grid */
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-card {
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow-card);
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .metric-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--color-primary);
+        }
+
+        .metric-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(to right, var(--color-primary), var(--color-secondary));
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .metric-card:hover::after {
+            opacity: 1;
+        }
+
+        .metric-info h3 {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-value {
+            font-size: 2.25rem;
+            font-weight: 700;
+        }
+
+        .metric-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .metric-card.alert-active {
+            border-color: rgba(239, 68, 68, 0.4);
+            background: radial-gradient(circle at top right, var(--color-danger-glow), transparent);
+        }
+
+        .metric-card.alert-active .metric-icon {
+            background-color: var(--color-danger-glow);
+            color: var(--color-danger);
+            animation: pulse-danger 2rem infinite;
+        }
+
+        @keyframes pulse-danger {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+
+        /* Controls / Filters Panel */
+        .controls-panel {
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-card);
+        }
+
+        .search-row {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .input-group {
+            flex: 1;
+            min-width: 200px;
+            position: relative;
+        }
+
+        .input-control {
+            width: 100%;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            padding: 0.75rem 1rem;
+            outline: none;
+            transition: var(--transition);
+            font-size: 0.95rem;
+        }
+
+        .input-control:focus {
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px var(--color-primary-glow);
+        }
+
+        .btn {
+            background-color: var(--color-primary);
+            color: #ffffff;
+            border: none;
+            border-radius: var(--radius-sm);
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .btn:hover {
+            filter: brightness(1.1);
+            transform: translateY(-1px);
+        }
+
+        .btn-success { background-color: var(--color-success); }
+        .btn-secondary { background-color: #3b4252; }
+        .btn-danger { background-color: var(--color-danger); }
+        
+        .filters-toggle-row {
+            margin-top: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .advanced-filters {
+            display: none;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .advanced-filters.open {
+            display: grid;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            user-select: none;
+            color: var(--text-secondary);
+        }
+
+        .checkbox-label:hover {
+            color: var(--text-primary);
+        }
+
+        .checkbox-label input {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--color-primary);
+        }
+
+        /* Products Table & Grid Layout */
+        .table-container {
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-card);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .data-table th {
+            background-color: rgba(255, 255, 255, 0.02);
+            color: var(--text-secondary);
+            font-weight: 500;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .data-table th:hover {
+            color: var(--text-primary);
+        }
+
+        .data-table td {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .data-table tbody tr {
+            transition: var(--transition);
+        }
+
+        .data-table tbody tr:hover {
+            background-color: rgba(255, 255, 255, 0.015);
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table td strong {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.6rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-category {
+            background-color: rgba(6, 182, 212, 0.1);
+            color: var(--color-secondary);
+            border: 1px solid rgba(6, 182, 212, 0.2);
+        }
+
+        .badge-success {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--color-success);
+        }
+
+        .badge-warning {
+            background-color: rgba(245, 158, 11, 0.1);
+            color: var(--color-warning);
+        }
+
+        .badge-danger {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--color-danger);
+        }
+
+        /* Actions Column */
+        .actions-cell {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .icon-btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .icon-btn:hover {
+            color: var(--text-primary);
+            border-color: var(--color-primary);
+            background-color: var(--color-primary-glow);
+        }
+
+        .icon-btn-danger:hover {
+            border-color: var(--color-danger);
+            background-color: var(--color-danger-glow);
+            color: var(--color-danger);
+        }
+
+        /* Tab Sections */
+        .tab-section {
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .tab-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Modals */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(11, 15, 25, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: var(--transition);
+        }
+
+        .modal-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-container {
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            width: 100%;
+            max-width: 500px;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+            transform: scale(0.95);
+            transition: var(--transition);
+        }
+
+        .modal-overlay.open .modal-container {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            padding: 1.25rem 1.5rem;
+            background-color: rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            font-size: 1.15rem;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .modal-close:hover {
+            color: var(--text-primary);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .modal-footer {
+            padding: 1.25rem 1.5rem;
+            background-color: rgba(255, 255, 255, 0.02);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .toast {
+            background-color: var(--bg-surface);
+            border-left: 4px solid var(--color-primary);
+            border-radius: var(--radius-sm);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+            padding: 1rem;
+            color: var(--text-primary);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            transform: translateX(120%);
+            animation: slideIn 0.3s forwards cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid var(--border-color);
+        }
+
+        .toast.success { border-left-color: var(--color-success); }
+        .toast.danger { border-left-color: var(--color-danger); }
+        .toast.warning { border-left-color: var(--color-warning); }
+
+        .toast-content h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .toast-content p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        @keyframes slideIn {
+            to { transform: translateX(0); }
+        }
+
+        /* Performance Tab Styling */
+        .performance-card {
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-card);
+            margin-bottom: 1.5rem;
+        }
+
+        .performance-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .performance-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            text-align: left;
+        }
+
+        .performance-table th, .performance-table td {
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .performance-table th {
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Loading spinner */
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border-left-color: var(--color-secondary);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Empty State */
+        .empty-state {
+            padding: 4rem 2rem;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header / Navbar -->
+    <header>
+        <div class="brand">
+            <div class="brand-logo">W</div>
+            <div class="brand-title">
+                <h1>Warehouse IQ</h1>
+                <p>Gestión de Inventario Inteligente</p>
+            </div>
+        </div>
+        <nav class="nav-links">
+            <button class="nav-btn active" onclick="switchTab('productos', this)">📦 Catálogo</button>
+            <button class="nav-btn" onclick="switchTab('categorias', this)">🏷️ Categorías</button>
+            <button class="nav-btn" onclick="switchTab('alertas', this)">🚨 Alertas</button>
+            <button class="nav-btn" onclick="switchTab('rendimiento', this)">📊 Rendimiento</button>
+            <a href="/swagger-ui.html" target="_blank" class="nav-btn" style="text-decoration: none;">📖 API Docs</a>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        
+        <!-- Tab: Productos -->
+        <section id="tab-productos" class="tab-section active">
+            <!-- Metrics Overview -->
+            <div class="overview-grid">
+                <div class="metric-card">
+                    <div class="metric-info">
+                        <h3>Total Productos</h3>
+                        <div class="metric-value" id="metric-total-productos">0</div>
+                    </div>
+                    <div class="metric-icon">📦</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-info">
+                        <h3>Categorías</h3>
+                        <div class="metric-value" id="metric-total-categorias">0</div>
+                    </div>
+                    <div class="metric-icon">🏷️</div>
+                </div>
+                <div class="metric-card alert-active" id="alert-card" style="cursor: pointer;" onclick="switchTab('alertas')">
+                    <div class="metric-info">
+                        <h3>Stock Bajo / Crítico</h3>
+                        <div class="metric-value" id="metric-total-alertas">0</div>
+                    </div>
+                    <div class="metric-icon">🚨</div>
+                </div>
+            </div>
+
+            <!-- Controls Panel -->
+            <div class="controls-panel">
+                <div class="search-row">
+                    <div class="input-group">
+                        <input type="text" id="search-input" class="input-control" placeholder="Buscar producto por nombre..." oninput="handleSearch()">
+                    </div>
+                    <button class="btn btn-secondary" onclick="toggleAdvancedFilters()">⚙️ Filtros avanzados</button>
+                    <button class="btn" onclick="openProductModal()">➕ Nuevo Producto</button>
+                </div>
+                
+                <div class="advanced-filters" id="advanced-filters">
+                    <div class="form-group">
+                        <label for="filter-categoria">Categoría</label>
+                        <select id="filter-categoria" class="input-control" onchange="loadProducts()">
+                            <option value="">Todas las categorías</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="filter-price-min">Precio mínimo</label>
+                        <input type="number" id="filter-price-min" class="input-control" placeholder="0.00" oninput="loadProducts()">
+                    </div>
+                    <div class="form-group">
+                        <label for="filter-price-max">Precio máximo</label>
+                        <input type="number" id="filter-price-max" class="input-control" placeholder="No limit" oninput="loadProducts()">
+                    </div>
+                    <div class="form-group" style="display: flex; align-items: flex-end; padding-bottom: 0.5rem;">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="filter-in-stock" onchange="loadProducts()">
+                            <span>Solo con stock disponible</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products Table -->
+            <div class="table-container">
+                <table class="data-table" id="products-table">
+                    <thead>
+                        <tr>
+                            <th onclick="sortProducts('id')">ID</th>
+                            <th onclick="sortProducts('nombre')">Nombre</th>
+                            <th>Descripción</th>
+                            <th onclick="sortProducts('precio')">Precio</th>
+                            <th onclick="sortProducts('stock')">Stock</th>
+                            <th>Categoría</th>
+                            <th style="width: 130px;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="products-table-body">
+                        <!-- Loaded dynamically -->
+                    </tbody>
+                </table>
+                <div id="products-empty-state" class="empty-state" style="display: none;">
+                    <div class="empty-state-icon">🔍</div>
+                    <p>No se encontraron productos que coincidan con la búsqueda.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tab: Categorias -->
+        <section id="tab-categorias" class="tab-section">
+            <div class="controls-panel">
+                <div class="search-row">
+                    <h2 style="flex: 1; font-size: 1.25rem;">Gestión de Categorías</h2>
+                    <button class="btn" onclick="openCategoryModal()">➕ Nueva Categoría</button>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 100px;">ID</th>
+                            <th>Nombre de Categoría</th>
+                            <th style="width: 150px;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="categories-table-body">
+                        <!-- Loaded dynamically -->
+                    </tbody>
+                </table>
+                <div id="categories-empty-state" class="empty-state" style="display: none;">
+                    <div class="empty-state-icon">🏷️</div>
+                    <p>No hay categorías registradas en el sistema.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tab: Alertas -->
+        <section id="tab-alertas" class="tab-section">
+            <div class="controls-panel">
+                <h2>Monitoreo de Alertas de Stock</h2>
+                <p style="color: var(--text-secondary); margin-top: 0.25rem;">Productos cuyo nivel de stock se encuentra por debajo de los umbrales mínimos establecidos.</p>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 100px;">ID</th>
+                            <th>Producto</th>
+                            <th style="width: 150px;">Stock Actual</th>
+                            <th>Nivel de Alerta</th>
+                        </tr>
+                    </thead>
+                    <tbody id="alerts-table-body">
+                        <!-- Loaded dynamically -->
+                    </tbody>
+                </table>
+                <div id="alerts-empty-state" class="empty-state">
+                    <div class="empty-state-icon">🛡️</div>
+                    <p>¡Todo en orden! No se detectaron productos con stock bajo o crítico.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tab: Rendimiento (Performance Report) -->
+        <section id="tab-rendimiento" class="tab-section">
+            <div class="performance-card">
+                <div class="performance-header">
+                    <div>
+                        <h2>Performance Report</h2>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.25rem;">
+                            Complejidades temporales Big O comparadas contra ejecuciones empíricas en nanosegundos (ns).
+                        </p>
+                    </div>
+                    <button class="btn" id="btn-refresh-performance" onclick="triggerPerformanceTest()">
+                        <span>🔄 Ejecutar mediciones</span>
+                        <div class="spinner" id="performance-spinner" style="display: none;"></div>
+                    </button>
+                </div>
+
+                <table class="performance-table">
+                    <thead>
+                        <tr>
+                            <th>Operación / Endpoint</th>
+                            <th>Big O Teórico</th>
+                            <th>1k registros</th>
+                            <th>10k registros</th>
+                            <th>100k registros</th>
+                        </tr>
+                    </thead>
+                    <tbody id="performance-table-body">
+                        <tr>
+                            <td><strong>POST /api/productos</strong> (Inserción)</td>
+                            <td>O(1)</td>
+                            <td id="perf-post-1k">-</td>
+                            <td id="perf-post-10k">-</td>
+                            <td id="perf-post-100k">-</td>
+                        </tr>
+                        <tr>
+                            <td><strong>GET /api/productos/{id}</strong> (Búsqueda ID)</td>
+                            <td>O(1)</td>
+                            <td id="perf-get-1k">-</td>
+                            <td id="perf-get-10k">-</td>
+                            <td id="perf-get-100k">-</td>
+                        </tr>
+                        <tr>
+                            <td><strong>GET /api/productos</strong> (Filtrado)</td>
+                            <td>O(n)</td>
+                            <td id="perf-list-1k">-</td>
+                            <td id="perf-list-10k">-</td>
+                            <td id="perf-list-100k">-</td>
+                        </tr>
+                        <tr>
+                            <td><strong>GET /api/productos/buscar</strong> (Búsqueda de texto)</td>
+                            <td>O(n·m)</td>
+                            <td id="perf-search-1k">-</td>
+                            <td id="perf-search-10k">-</td>
+                            <td id="perf-search-100k">-</td>
+                        </tr>
+                        <tr>
+                            <td><strong>GET /api/productos/ordenados</strong> (Ordenamiento)</td>
+                            <td>O(n log n)</td>
+                            <td id="perf-sort-1k">-</td>
+                            <td id="perf-sort-10k">-</td>
+                            <td id="perf-sort-100k">-</td>
+                        </tr>
+                        <tr>
+                            <td><strong>GET /api/alertas/stock-bajo</strong> (Filtro alertas)</td>
+                            <td>O(n)</td>
+                            <td id="perf-alert-1k">-</td>
+                            <td id="perf-alert-10k">-</td>
+                            <td id="perf-alert-100k">-</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="performance-card">
+                <h3 style="margin-bottom: 0.5rem;">Justificación Algorítmica</h3>
+                <p style="color: var(--text-secondary); line-height: 1.6; font-size: 0.95rem; margin-bottom: 1rem;">
+                    Las operaciones de inserción y búsqueda directa por ID son <strong>O(1)</strong> porque operan directamente sobre claves en una tabla hash segura para hilos (<code>ConcurrentHashMap</code>). 
+                    Por otro lado, los filtros y listados iteran todos los elementos aplicando predicados lógicos, por lo que escalan de manera lineal <strong>O(n)</strong>. El ordenamiento en Java utiliza <strong>TimSort</strong>, lo cual crece a un orden de <strong>O(n log n)</strong>.
+                </p>
+                <div style="background-color: var(--color-primary-glow); border-left: 4px solid var(--color-primary); padding: 1rem; border-radius: var(--radius-sm); font-size: 0.9rem;">
+                    💡 <strong>Tip para el reporte:</strong> La primera prueba puede reflejar tiempos mayores de ejecución debido al overhead inicial del compilador JIT de la JVM. Se sugiere realizar múltiples ejecuciones para promediar las estadísticas en condiciones estables.
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal: Agregar/Editar Producto -->
+    <div class="modal-overlay" id="product-modal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2 id="product-modal-title">Agregar Producto</h2>
+                <button class="modal-close" onclick="closeProductModal()">&times;</button>
+            </div>
+            <form id="product-form" onsubmit="saveProduct(event)">
+                <input type="hidden" id="product-id">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="product-name">Nombre del Producto</label>
+                        <input type="text" id="product-name" class="input-control" required minlength="2" maxlength="100">
+                    </div>
+                    <div class="form-group">
+                        <label for="product-desc">Descripción</label>
+                        <textarea id="product-desc" class="input-control" rows="3" maxlength="500"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="product-price">Precio Unitario ($)</label>
+                        <input type="number" id="product-price" class="input-control" step="0.01" min="0" required placeholder="0.00">
+                    </div>
+                    <div class="form-group" id="stock-inicial-group">
+                        <label for="product-stock">Stock Inicial</label>
+                        <input type="number" id="product-stock" class="input-control" min="0" required placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="product-category">Categoría</label>
+                        <select id="product-category" class="input-control" required>
+                            <!-- Dynamically loaded -->
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeProductModal()">Cancelar</button>
+                    <button type="submit" class="btn">Guardar Producto</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Agregar/Editar Categoría -->
+    <div class="modal-overlay" id="category-modal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2 id="category-modal-title">Agregar Categoría</h2>
+                <button class="modal-close" onclick="closeCategoryModal()">&times;</button>
+            </div>
+            <form id="category-form" onsubmit="saveCategory(event)">
+                <input type="hidden" id="category-id">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="category-name">Nombre de la Categoría</label>
+                        <input type="text" id="category-name" class="input-control" required minlength="2" maxlength="50">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeCategoryModal()">Cancelar</button>
+                    <button type="submit" class="btn">Guardar Categoría</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Registrar Movimiento -->
+    <div class="modal-overlay" id="movement-modal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2>Registrar Movimiento de Stock</h2>
+                <button class="modal-close" onclick="closeMovementModal()">&times;</button>
+            </div>
+            <form id="movement-form" onsubmit="saveMovement(event)">
+                <input type="hidden" id="movement-product-id">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Producto</label>
+                        <input type="text" id="movement-product-name" class="input-control" readonly style="background-color: rgba(255,255,255,0.02); color: var(--text-secondary);">
+                    </div>
+                    <div class="form-group">
+                        <label for="movement-type">Tipo de Operación</label>
+                        <select id="movement-type" class="input-control" required>
+                            <option value="ENTRADA">📥 ENTRADA (Incrementar stock)</option>
+                            <option value="SALIDA">📤 SALIDA (Decrementar stock)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="movement-qty">Cantidad</label>
+                        <input type="number" id="movement-qty" class="input-control" min="1" required placeholder="Cantidad de unidades">
+                    </div>
+                    <div class="form-group">
+                        <label for="movement-reason">Motivo / Justificación</label>
+                        <input type="text" id="movement-reason" class="input-control" required placeholder="Ej.: Abastecimiento, Venta, Rotura">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeMovementModal()">Cancelar</button>
+                    <button type="submit" class="btn">Registrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Historial de Movimientos -->
+    <div class="modal-overlay" id="history-modal">
+        <div class="modal-container" style="max-width: 700px;">
+            <div class="modal-header">
+                <h2>Historial de Movimientos — <span id="history-product-name"></span></h2>
+                <button class="modal-close" onclick="closeHistoryModal()">&times;</button>
+            </div>
+            <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Tipo</th>
+                            <th>Cantidad</th>
+                            <th>Stock Resultante</th>
+                            <th>Motivo</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-table-body">
+                        <!-- Loaded dynamically -->
+                    </tbody>
+                </table>
+                <div id="history-empty-state" class="empty-state" style="display: none;">
+                    <div class="empty-state-icon">🕒</div>
+                    <p>No hay movimientos registrados para este producto.</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeHistoryModal()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script>
+        // State
+        let categories = [];
+        let products = [];
+        let sortField = 'id';
+        let sortDirection = 'asc';
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadAllData();
+            loadPerformanceFromStorage();
+        });
+
+        function loadAllData() {
+            loadCategories();
+            loadProducts();
+            loadAlerts();
+        }
+
+        // Tab Navigation
+        function switchTab(tabId, btn) {
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-section').forEach(section => section.classList.remove('active'));
+            
+            if (btn) {
+                btn.classList.add('active');
+            } else {
+                // Fallback to active based on index
+                const buttons = document.querySelectorAll('.nav-links .nav-btn');
+                if (tabId === 'productos') buttons[0]?.classList.add('active');
+                else if (tabId === 'categorias') buttons[1]?.classList.add('active');
+                else if (tabId === 'alertas') buttons[2]?.classList.add('active');
+                else if (tabId === 'rendimiento') buttons[3]?.classList.add('active');
+            }
+
+            const targetSection = document.getElementById(`tab-${tabId}`);
+            if (targetSection) targetSection.classList.add('active');
+
+            if (tabId === 'productos') {
+                loadProducts();
+            } else if (tabId === 'categorias') {
+                loadCategories();
+            } else if (tabId === 'alertas') {
+                loadAlerts();
+            }
+        }
+
+        // Toaster System
+        function showToast(title, message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `
+                <div class="toast-content">
+                    <h4>${title}</h4>
+                    <p>${message}</p>
+                </div>
+                <button onclick="this.parentElement.remove()" style="background:transparent; border:none; color:var(--text-secondary); cursor:pointer;">&times;</button>
+            `;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.remove();
+            }, 5000);
+        }
+
+        // Fetching Functions
+        function loadCategories() {
+            fetch('/api/categorias')
+                .then(res => res.json())
+                .then(data => {
+                    categories = data;
+                    document.getElementById('metric-total-categorias').innerText = categories.length;
+                    
+                    // Populate selectors
+                    const selectFilter = document.getElementById('filter-categoria');
+                    const selectForm = document.getElementById('product-category');
+                    
+                    selectFilter.innerHTML = '<option value="">Todas las categorías</option>';
+                    selectForm.innerHTML = '<option value="">Selecciona una categoría</option>';
+                    
+                    categories.forEach(cat => {
+                        selectFilter.innerHTML += `<option value="${cat.id}">${cat.nombre}</option>`;
+                        selectForm.innerHTML += `<option value="${cat.id}">${cat.nombre}</option>`;
+                    });
+
+                    renderCategoriesTable();
+                })
+                .catch(err => showToast('Error', 'No se pudieron cargar las categorías', 'danger'));
+        }
+
+        function loadProducts() {
+            // Build query params
+            const catId = document.getElementById('filter-categoria').value;
+            const priceMin = document.getElementById('filter-price-min').value;
+            const priceMax = document.getElementById('filter-price-max').value;
+            const inStock = document.getElementById('filter-in-stock').checked;
+            const q = document.getElementById('search-input').value;
+
+            let url = '/api/productos';
+            const params = [];
+            if (catId) params.push(`categoria=${catId}`);
+            if (priceMin) params.push(`precioMin=${priceMin}`);
+            if (priceMax) params.push(`precioMax=${priceMax}`);
+            if (inStock) params.push(`enStock=true`);
+
+            // If query exists, we use search endpoint instead
+            if (q && q.trim().length > 0) {
+                url = `/api/productos/buscar?q=${encodeURIComponent(q)}`;
+            } else if (params.length > 0) {
+                url += '?' + params.join('&');
+            }
+
+            fetch(url)
+                .then(res => {
+                    if (!res.ok) throw new Error();
+                    return res.json();
+                })
+                .then(data => {
+                    products = data;
+                    document.getElementById('metric-total-productos').innerText = products.length;
+                    
+                    // Applying client side sorting if requested
+                    sortData();
+                    renderProductsTable();
+                })
+                .catch(err => {
+                    // Empty list or error handling
+                    products = [];
+                    renderProductsTable();
+                });
+        }
+
+        function loadAlerts() {
+            fetch('/api/alertas/stock-bajo')
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('metric-total-alertas').innerText = data.length;
+                    const card = document.getElementById('alert-card');
+                    if (data.length > 0) {
+                        card.classList.add('alert-active');
+                    } else {
+                        card.classList.remove('alert-active');
+                    }
+                    renderAlertsTable(data);
+                })
+                .catch(err => console.error(err));
+        }
+
+        // Render Functions
+        function renderProductsTable() {
+            const body = document.getElementById('products-table-body');
+            const emptyState = document.getElementById('products-empty-state');
+            body.innerHTML = '';
+
+            if (products.length === 0) {
+                emptyState.style.display = 'block';
+                return;
+            }
+            emptyState.style.display = 'none';
+
+            products.forEach(p => {
+                const badgeClass = p.stock === 0 ? 'badge-danger' : p.stock < 10 ? 'badge-warning' : 'badge-success';
+                
+                body.innerHTML += `
+                    <tr>
+                        <td><strong>#${p.id}</strong></td>
+                        <td><strong>${p.nombre}</strong></td>
+                        <td>${p.descripcion || '<em style="color:var(--text-secondary)">Sin descripción</em>'}</td>
+                        <td>$${p.precio.toFixed(2)}</td>
+                        <td><span class="badge ${badgeClass}">${p.stock} uds</span></td>
+                        <td><span class="badge badge-category">${p.categoria ? p.categoria.nombre : 'Sin categoría'}</span></td>
+                        <td class="actions-cell">
+                            <button class="icon-btn" onclick="openHistoryModal(${p.id}, '${p.nombre.replace(/'/g, "\\'")}')" title="Ver Historial">📜</button>
+                            <button class="icon-btn" onclick="openMovementModal(${p.id}, '${p.nombre.replace(/'/g, "\\'")}')" title="Registrar Movimiento">↕️</button>
+                            <button class="icon-btn" onclick="editProduct(${p.id})" title="Editar">✏️</button>
+                            <button class="icon-btn icon-btn-danger" onclick="deleteProduct(${p.id})" title="Eliminar">🗑️</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function renderCategoriesTable() {
+            const body = document.getElementById('categories-table-body');
+            const emptyState = document.getElementById('categories-empty-state');
+            body.innerHTML = '';
+
+            if (categories.length === 0) {
+                emptyState.style.display = 'block';
+                return;
+            }
+            emptyState.style.display = 'none';
+
+            categories.forEach(cat => {
+                body.innerHTML += `
+                    <tr>
+                        <td><strong>#${cat.id}</strong></td>
+                        <td><strong>${cat.nombre}</strong></td>
+                        <td class="actions-cell">
+                            <button class="icon-btn" onclick="editCategory(${cat.id}, '${cat.nombre.replace(/'/g, "\\'")}')" title="Editar">✏️</button>
+                            <button class="icon-btn icon-btn-danger" onclick="deleteCategory(${cat.id})" title="Eliminar">🗑️</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function renderAlertsTable(data) {
+            const body = document.getElementById('alerts-table-body');
+            const emptyState = document.getElementById('alerts-empty-state');
+            body.innerHTML = '';
+
+            if (data.length === 0) {
+                emptyState.style.display = 'block';
+                return;
+            }
+            emptyState.style.display = 'none';
+
+            data.forEach(a => {
+                const alertBadgeClass = a.nivelAlerta === 'CRITICO' ? 'badge-danger' : 'badge-warning';
+                body.innerHTML += `
+                    <tr>
+                        <td><strong>#${a.productoId}</strong></td>
+                        <td><strong>${a.nombreProducto}</strong></td>
+                        <td><span class="badge ${alertBadgeClass}">${a.stockActual} uds</span></td>
+                        <td><span class="badge ${alertBadgeClass}">${a.nivelAlerta}</span></td>
+                    </tr>
+                `;
+            });
+        }
+
+        // Sorting & Searching Actions
+        function handleSearch() {
+            loadProducts();
+        }
+
+        function sortProducts(field) {
+            if (sortField === field) {
+                sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+            } else {
+                sortField = field;
+                sortDirection = 'asc';
+            }
+            loadProducts();
+        }
+
+        function sortData() {
+            products.sort((a, b) => {
+                let valA = a[sortField];
+                let valB = b[sortField];
+                
+                // Nesting handling
+                if (sortField === 'categoria') {
+                    valA = a.categoria ? a.categoria.nombre : '';
+                    valB = b.categoria ? b.categoria.nombre : '';
+                }
+
+                if (typeof valA === 'string') {
+                    return sortDirection === 'asc' 
+                        ? valA.localeCompare(valB) 
+                        : valB.localeCompare(valA);
+                } else {
+                    return sortDirection === 'asc' ? valA - valB : valB - valA;
+                }
+            });
+        }
+
+        function toggleAdvancedFilters() {
+            const panel = document.getElementById('advanced-filters');
+            panel.classList.toggle('open');
+        }
+
+        // Product CRUD Actions
+        function openProductModal() {
+            document.getElementById('product-modal-title').innerText = 'Agregar Producto';
+            document.getElementById('product-form').reset();
+            document.getElementById('product-id').value = '';
+            document.getElementById('stock-inicial-group').style.display = 'block';
+            document.getElementById('product-modal').classList.add('open');
+        }
+
+        function closeProductModal() {
+            document.getElementById('product-modal').classList.remove('open');
+        }
+
+        function saveProduct(event) {
+            event.preventDefault();
+            const id = document.getElementById('product-id').value;
+            const body = {
+                nombre: document.getElementById('product-name').value,
+                descripcion: document.getElementById('product-desc').value,
+                precio: parseFloat(document.getElementById('product-price').value),
+                stockInicial: parseInt(document.getElementById('product-stock').value || 0),
+                categoriaId: parseInt(document.getElementById('product-category').value)
+            };
+
+            const method = id ? 'PUT' : 'POST';
+            const url = id ? `/api/productos/${id}` : '/api/productos';
+
+            fetch(url, {
+                method: method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            })
+            .then(res => {
+                if (!res.ok) return res.json().then(err => { throw err; });
+                return res.json();
+            })
+            .then(data => {
+                showToast('Éxito', `Producto guardado con éxito`, 'success');
+                closeProductModal();
+                loadAllData();
+            })
+            .catch(err => {
+                const msg = err.mensaje || err.error || 'Campos incorrectos o categoría inválida.';
+                showToast('Error al guardar', msg, 'danger');
+            });
+        }
+
+        function editProduct(id) {
+            fetch(`/api/productos/${id}`)
+                .then(res => res.json())
+                .then(p => {
+                    document.getElementById('product-modal-title').innerText = 'Editar Producto';
+                    document.getElementById('product-id').value = p.id;
+                    document.getElementById('product-name').value = p.nombre;
+                    document.getElementById('product-desc').value = p.descripcion || '';
+                    document.getElementById('product-price').value = p.precio;
+                    document.getElementById('stock-inicial-group').style.display = 'none'; // Not editable on PUT
+                    document.getElementById('product-category').value = p.categoria ? p.categoria.id : '';
+                    
+                    document.getElementById('product-modal').classList.add('open');
+                })
+                .catch(err => showToast('Error', 'No se pudo cargar el producto', 'danger'));
+        }
+
+        function deleteProduct(id) {
+            if (!confirm('¿Estás seguro de que deseas eliminar este producto?')) return;
+            fetch(`/api/productos/${id}`, { method: 'DELETE' })
+                .then(res => {
+                    if (res.status === 204) {
+                        showToast('Eliminado', 'Producto eliminado de forma definitiva', 'success');
+                        loadAllData();
+                    } else {
+                        throw new Error();
+                    }
+                })
+                .catch(() => showToast('Error', 'No se pudo eliminar el producto.', 'danger'));
+        }
+
+        // Category CRUD Actions
+        function openCategoryModal() {
+            document.getElementById('category-modal-title').innerText = 'Agregar Categoría';
+            document.getElementById('category-form').reset();
+            document.getElementById('category-id').value = '';
+            document.getElementById('category-modal').classList.add('open');
+        }
+
+        function closeCategoryModal() {
+            document.getElementById('category-modal').classList.remove('open');
+        }
+
+        function saveCategory(event) {
+            event.preventDefault();
+            const id = document.getElementById('category-id').value;
+            const body = {
+                nombre: document.getElementById('category-name').value
+            };
+
+            const method = id ? 'PUT' : 'POST';
+            const url = id ? `/api/categorias/${id}` : '/api/categorias';
+
+            fetch(url, {
+                method: method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            })
+            .then(res => {
+                if (!res.ok) return res.json().then(err => { throw err; });
+                return res.json();
+            })
+            .then(() => {
+                showToast('Éxito', 'Categoría guardada con éxito', 'success');
+                closeCategoryModal();
+                loadAllData();
+            })
+            .catch(err => {
+                const msg = err.mensaje || 'Error al procesar la categoría.';
+                showToast('Error', msg, 'danger');
+            });
+        }
+
+        function editCategory(id, name) {
+            document.getElementById('category-modal-title').innerText = 'Editar Categoría';
+            document.getElementById('category-id').value = id;
+            document.getElementById('category-name').value = name;
+            document.getElementById('category-modal').classList.add('open');
+        }
+
+        function deleteCategory(id) {
+            if (!confirm('¿Estás seguro de que deseas eliminar esta categoría?')) return;
+            fetch(`/api/categorias/${id}`, { method: 'DELETE' })
+                .then(res => {
+                    if (res.status === 204) {
+                        showToast('Eliminado', 'Categoría eliminada con éxito', 'success');
+                        loadAllData();
+                    } else if (res.status === 409) {
+                        return res.json().then(err => { throw err; });
+                    } else {
+                        throw new Error('No se pudo completar la operación');
+                    }
+                })
+                .catch(err => {
+                    const msg = err.mensaje || 'Existen productos asociados a esta categoría.';
+                    showToast('Conflicto (409)', msg, 'danger');
+                });
+        }
+
+        // Movement Actions
+        function openMovementModal(productId, productName) {
+            document.getElementById('movement-product-id').value = productId;
+            document.getElementById('movement-product-name').value = productName;
+            document.getElementById('movement-form').reset();
+            document.getElementById('movement-modal').classList.add('open');
+        }
+
+        function closeMovementModal() {
+            document.getElementById('movement-modal').classList.remove('open');
+        }
+
+        // History Actions
+        function openHistoryModal(productId, productName) {
+            document.getElementById('history-product-name').innerText = productName;
+            const body = document.getElementById('history-table-body');
+            const emptyState = document.getElementById('history-empty-state');
+            body.innerHTML = '';
+            emptyState.style.display = 'none';
+
+            fetch(`/api/movimientos/producto/${productId}`)
+                .then(res => {
+                    if (!res.ok) throw new Error();
+                    return res.json();
+                })
+                .then(data => {
+                    if (data.length === 0) {
+                        emptyState.style.display = 'block';
+                        return;
+                    }
+                    data.forEach(m => {
+                        const badgeClass = m.tipo === 'ENTRADA' ? 'badge-success' : 'badge-danger';
+                        const fecha = new Date(m.fecha).toLocaleString();
+                        body.innerHTML += `
+                            <tr>
+                                <td>${fecha}</td>
+                                <td><span class="badge ${badgeClass}">${m.tipo}</span></td>
+                                <td><strong>${m.cantidad} uds</strong></td>
+                                <td>${m.stockResultante} uds</td>
+                                <td>${m.motivo}</td>
+                            </tr>
+                        `;
+                    });
+                })
+                .catch(() => {
+                    showToast('Error', 'No se pudo cargar el historial de movimientos', 'danger');
+                });
+            document.getElementById('history-modal').classList.add('open');
+        }
+
+        function closeHistoryModal() {
+            document.getElementById('history-modal').classList.remove('open');
+        }
+
+        function saveMovement(event) {
+            event.preventDefault();
+            const body = {
+                productoId: parseInt(document.getElementById('movement-product-id').value),
+                tipo: document.getElementById('movement-type').value,
+                cantidad: parseInt(document.getElementById('movement-qty').value),
+                motivo: document.getElementById('movement-reason').value
+            };
+
+            fetch('/api/movimientos', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            })
+            .then(res => {
+                if (!res.ok) return res.json().then(err => { throw err; });
+                return res.json();
+            })
+            .then(data => {
+                showToast('Movimiento Registrado', `Stock resultante: ${data.stockResultante} unidades`, 'success');
+                closeMovementModal();
+                loadAllData();
+            })
+            .catch(err => {
+                const msg = err.mensaje || 'Error al procesar el movimiento.';
+                showToast('Conflicto de Stock', msg, 'danger');
+            });
+        }
+
+        // Performance Testing Hub
+        function triggerPerformanceTest() {
+            const btn = document.getElementById('btn-refresh-performance');
+            const spinner = document.getElementById('performance-spinner');
+            
+            btn.disabled = true;
+            spinner.style.display = 'block';
+
+            fetch('/api/admin/performance-report')
+                .then(res => res.json())
+                .then(data => {
+                    localStorage.setItem('perf_data', JSON.stringify(data));
+                    renderPerformanceTable(data);
+                    showToast('Prueba de Carga', 'Reporte de performance Big O generado con éxito', 'success');
+                })
+                .catch(err => showToast('Error', 'No se pudieron estimar los tiempos de performance.', 'danger'))
+                .finally(() => {
+                    btn.disabled = false;
+                    spinner.style.display = 'none';
+                });
+        }
+
+        function loadPerformanceFromStorage() {
+            const dataStr = localStorage.getItem('perf_data');
+            if (dataStr) {
+                renderPerformanceTable(JSON.parse(dataStr));
+            }
+        }
+
+        function renderPerformanceTable(data) {
+            const p1k = data['1000_registros'];
+            const p10k = data['10000_registros'];
+            const p100k = data['100000_registros'];
+
+            if (!p1k || !p10k || !p100k) return;
+
+            document.getElementById('perf-post-1k').innerText = p1k['POST_productos_O_1'];
+            document.getElementById('perf-post-10k').innerText = p10k['POST_productos_O_1'];
+            document.getElementById('perf-post-100k').innerText = p100k['POST_productos_O_1'];
+
+            document.getElementById('perf-get-1k').innerText = p1k['GET_producto_por_id_O_1'];
+            document.getElementById('perf-get-10k').innerText = p10k['GET_producto_por_id_O_1'];
+            document.getElementById('perf-get-100k').innerText = p100k['GET_producto_por_id_O_1'];
+
+            document.getElementById('perf-list-1k').innerText = p1k['GET_productos_filtrados_O_n'];
+            document.getElementById('perf-list-10k').innerText = p10k['GET_productos_filtrados_O_n'];
+            document.getElementById('perf-list-100k').innerText = p100k['GET_productos_filtrados_O_n'];
+
+            document.getElementById('perf-search-1k').innerText = p1k['GET_productos_buscar_O_n_x_m'];
+            document.getElementById('perf-search-10k').innerText = p10k['GET_productos_buscar_O_n_x_m'];
+            document.getElementById('perf-search-100k').innerText = p100k['GET_productos_buscar_O_n_x_m'];
+
+            document.getElementById('perf-sort-1k').innerText = p1k['GET_productos_ordenados_O_n_log_n'];
+            document.getElementById('perf-sort-10k').innerText = p10k['GET_productos_ordenados_O_n_log_n'];
+            document.getElementById('perf-sort-100k').innerText = p100k['GET_productos_ordenados_O_n_log_n'];
+
+            document.getElementById('perf-alert-1k').innerText = p1k['GET_alertas_stock_bajo_O_n'];
+            document.getElementById('perf-alert-10k').innerText = p10k['GET_alertas_stock_bajo_O_n'];
+            document.getElementById('perf-alert-100k').innerText = p100k['GET_alertas_stock_bajo_O_n'];
+        }
+    </script>
+</body>
+</html>

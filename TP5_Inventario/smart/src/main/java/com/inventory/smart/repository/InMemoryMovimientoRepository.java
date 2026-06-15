@@ -33,3 +33,9 @@ public class InMemoryMovimientoRepository
     public List<MovimientoInventario> findByProductoId(Long productoId) {
         if (productoId == null) {
             return List.of();
+        }
+        return dataStore.values().stream()
+                .filter(m -> productoId.equals(m.getProductoId()))
+                .toList();
+    }
+}

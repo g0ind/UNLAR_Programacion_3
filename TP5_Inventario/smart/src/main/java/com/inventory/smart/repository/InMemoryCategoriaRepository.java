@@ -17,3 +17,9 @@ public class InMemoryCategoriaRepository
         extends GenericInMemoryRepository<Categoria, Long>
         implements CategoriaRepository {
 
+    /**
+     * Constructor por defecto del repositorio de categorías en memoria.
+     */
+    public InMemoryCategoriaRepository() {
+    }
+}
