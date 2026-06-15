@@ -1,5 +1,4 @@
 package com.inventory.smart.service;
 
-public class ProductoService {
-
+public class AlertaStrategyImpl {
 }
