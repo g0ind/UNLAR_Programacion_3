@@ -54,6 +54,5 @@ public interface CategoriaService {
      *
      * @param id el identificador de la categoría a eliminar
      */
-    /*chea cambio*/
     void deleteById(Long id);
 }
