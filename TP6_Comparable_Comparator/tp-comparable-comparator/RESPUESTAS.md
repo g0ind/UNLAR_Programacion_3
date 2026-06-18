@@ -25,3 +25,10 @@ Un overflow de enteros ocurre cuando el resultado de una operación aritmética 
 Este resultado erróneo rompe el contrato de `Comparator`, ya que el signo devuelto es inconsistente con el orden real de los elementos. Esto viola la propiedad transitiva y simétrica del ordenamiento. 
 
 `Integer.compare(a, b)` evita este desborde porque no realiza restas; en su lugar, utiliza operadores lógicos relacionales comparando directamente las magnitudes (equivalente a `(a < b) ? -1 : ((a == b) ? 0 : 1)`).
+
+## Pregunta 5
+**¿Qué patrón de diseño estás aplicando al usar un `Map<String, Comparator<T>>` en lugar de un `switch`? Explicá cómo se relaciona con el polimorfismo y por qué es preferible a la alternativa procedural.**
+
+Estamos aplicando el patrón **Strategy**. Cada `Comparator` registrado en el mapa es una estrategia de comparación intercambiable, y el mapa funciona como un catálogo de estrategias accesibles por clave. El método `ordenar()` no conoce los detalles de implementación de cada comparación; simplemente selecciona la estrategia correspondiente y le delega el comportamiento. Esto representa polimorfismo en acción ya que todas las estrategias implementan la interfaz funcional `Comparator<Estudiante>`, y el cliente las utiliza de forma homogénea.
+
+Es preferible a una estructura de control condicional (`switch` o `if-else`) porque respeta el principio abierto/cerrado (OCP). Si en el futuro se añade un nuevo criterio de ordenamiento, solo hay que registrarlo en el mapa sin alterar la lógica de ordenación del servicio. Esto reduce el acoplamiento y distribuye las responsabilidades cumpliendo con SRP.
